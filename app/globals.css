@@ -8,6 +8,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* sticky 헤더(64px) 아래로 섹션이 가려지지 않게 앵커 오프셋 */
+section[id] {
+  scroll-margin-top: 84px;
+}
+
 body {
   background: theme(colors.paper);
   color: theme(colors.ink);
@@ -23,7 +28,7 @@ body {
     @apply py-20 md:py-28;
   }
   .eyebrow {
-    @apply text-xs font-semibold tracking-[0.2em] text-accent uppercase;
+    @apply text-xs font-semibold tracking-[0.08em] text-accent;
   }
   .h-section {
     @apply mt-3 text-3xl md:text-4xl font-extrabold tracking-tight;
