@@ -5,7 +5,7 @@ import Reveal from "./components/Reveal";
 import Tilt from "./components/Tilt";
 import CountUp from "./components/CountUp";
 import Magnet from "./components/Magnet";
-import { profile, metrics, evidence, projects, projectGroups, career, skills, type Project } from "./data";
+import { profile, metrics, evidence, projects, projectGroups, career, skills, about, type Project } from "./data";
 
 export default function Home() {
   return (
@@ -16,6 +16,7 @@ export default function Home() {
       <MarketingResults />
       <Differentiator />
       <Method />
+      <About />
       <Projects />
       <Career />
       <Skills />
@@ -188,6 +189,74 @@ function Method() {
             </div>
           ))}
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <section id="about" className="section">
+      <div className="wrap">
+        <Reveal>
+          <p className="eyebrow">소개</p>
+          <h2 className="h-section">글에서 시작해, 코드로 완성합니다</h2>
+        </Reveal>
+
+        <div className="mt-12 grid gap-10 lg:grid-cols-[1.5fr_1fr]">
+          {/* 스토리 */}
+          <div>
+            <Reveal>
+              <blockquote className="border-l-4 border-accent pl-5 text-2xl font-extrabold leading-snug tracking-tight text-white md:text-3xl">
+                “{about.quote}”
+              </blockquote>
+            </Reveal>
+            <Reveal className="mt-8 space-y-5" stagger>
+              {about.story.map((p, i) => (
+                <p key={i} className="max-w-[62ch] text-[15.5px] leading-relaxed text-sub">
+                  {p}
+                </p>
+              ))}
+            </Reveal>
+          </div>
+
+          {/* 사진 + 원칙 */}
+          <div className="flex flex-col gap-6">
+            <Reveal>
+              {about.photo ? (
+                <div className="overflow-hidden border border-line bg-surface">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={about.photo} alt={`${profile.name} 프로필`} className="w-full object-cover" />
+                </div>
+              ) : (
+                <div className="relative flex aspect-[4/3] items-end overflow-hidden border border-line bg-surface p-6">
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-3 -top-8 text-[7rem] font-extrabold leading-none text-transparent"
+                    style={{ WebkitTextStroke: "1.2px rgba(230,58,15,0.3)" }}
+                  >
+                    PARK
+                  </div>
+                  <div>
+                    <div className="text-2xl font-extrabold text-white">{profile.name}</div>
+                    <div className="mt-1 text-sm text-sub">{profile.role} · {profile.location}</div>
+                  </div>
+                </div>
+              )}
+            </Reveal>
+            <Reveal className="grid gap-px border border-line bg-line" stagger>
+              {about.principles.map((pr) => (
+                <div key={pr.k} className="bg-surface p-5">
+                  <div className="text-[15px] font-extrabold text-white">
+                    <span className="mr-2 text-accent">—</span>
+                    {pr.k}
+                  </div>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-sub">{pr.d}</p>
+                </div>
+              ))}
+            </Reveal>
+          </div>
+        </div>
       </div>
     </section>
   );

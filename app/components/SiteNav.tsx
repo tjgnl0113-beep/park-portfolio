@@ -5,6 +5,7 @@ import { useState } from "react";
 const LINKS: [string, string][] = [
   ["성과", "#metrics"],
   ["실적", "#results"],
+  ["소개", "#about"],
   ["프로젝트", "#projects"],
   ["경력", "#career"],
   ["스킬", "#skills"],
