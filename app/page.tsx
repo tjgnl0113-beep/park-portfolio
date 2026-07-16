@@ -2,7 +2,6 @@ import Link from "next/link";
 import SiteNav from "./components/SiteNav";
 import HeroV2 from "./components/HeroV2";
 import Reveal from "./components/Reveal";
-import FxLayer from "./components/FxLayer";
 import Tilt from "./components/Tilt";
 import CountUp from "./components/CountUp";
 import Magnet from "./components/Magnet";
@@ -11,12 +10,12 @@ import { profile, metrics, evidence, projects, projectGroups, career, skills, ty
 export default function Home() {
   return (
     <main>
-      <FxLayer />
       <SiteNav name={profile.name} role={profile.role} email={profile.email} />
       <HeroV2 />
       <Metrics />
       <MarketingResults />
       <Differentiator />
+      <Method />
       <Projects />
       <Career />
       <Skills />
@@ -133,6 +132,61 @@ function Differentiator() {
               </p>
             </div>
           </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+const METHOD_STEPS = [
+  {
+    n: "01",
+    title: "검색 장악",
+    desc: "타깃 키워드의 상위 노출을 복수로 점유해, 잠재 고객이 무엇을 클릭하든 우리에게 오게 만든다.",
+  },
+  {
+    n: "02",
+    title: "전환 설계",
+    desc: "노출에서 멈추지 않는다. 진단 퍼널·게이팅으로 방문자를 상담과 문의로 바꾼다.",
+  },
+  {
+    n: "03",
+    title: "자동화",
+    desc: "발행·추적·리드 수집 같은 반복 작업은 직접 만든 도구에 맡기고, 사람은 전략에 집중한다.",
+  },
+  {
+    n: "04",
+    title: "데이터 반복",
+    desc: "실측 지표로 검증하고, 이기는 패턴을 시스템으로 복제한다. 성과가 ‘감’이 아니라 ‘구조’가 된다.",
+  },
+];
+
+function Method() {
+  return (
+    <section id="method" className="section border-y border-line bg-white/[0.015]">
+      <div className="wrap">
+        <Reveal>
+          <p className="eyebrow">일하는 방식</p>
+          <h2 className="h-section">성과가 반복되는 4단계 구조</h2>
+          <p className="mt-3 max-w-2xl text-sub">
+            위의 숫자들은 우연이 아니라, 이 순서를 지킨 결과입니다.
+          </p>
+        </Reveal>
+        <Reveal className="mt-12 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4" stagger>
+          {METHOD_STEPS.map((st) => (
+            <div key={st.n} className="group relative overflow-hidden bg-surface p-6 transition-colors hover:bg-[#16161a] md:p-7">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-2 -top-6 text-[5.5rem] font-extrabold leading-none text-transparent transition-colors"
+                style={{ WebkitTextStroke: "1.2px rgba(230,58,15,0.28)" }}
+              >
+                {st.n}
+              </div>
+              <div className="text-[13px] font-bold text-accent">{st.n}</div>
+              <h3 className="mt-2 text-lg font-extrabold text-white">{st.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-sub">{st.desc}</p>
+            </div>
+          ))}
         </Reveal>
       </div>
     </section>
@@ -360,8 +414,11 @@ function Contact() {
             </Magnet>
           </div>
         </Reveal>
-        <footer className="mt-20 border-t border-line pt-8 text-sm text-faint">
-          © {new Date().getFullYear()} {profile.name}. {profile.location}.
+        <footer className="mt-20 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-8 text-sm text-faint">
+          <span>© {new Date().getFullYear()} {profile.name}. {profile.location}.</span>
+          <span>
+            이 포트폴리오 사이트도 <b className="font-semibold text-sub">직접 설계·개발</b>했습니다 — Next.js · Tailwind · 인터랙션 직접 구현
+          </span>
         </footer>
       </div>
     </section>

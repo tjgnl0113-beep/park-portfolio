@@ -54,7 +54,7 @@ export default function Gallery({
               <img
                 src={shot.src}
                 alt={shot.caption ?? `${title} 화면 ${i + 1}`}
-                className="w-full"
+                className="w-full transition-transform duration-700 ease-out group-hover:scale-[1.02]"
               />
               <span className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover:bg-black/30 group-hover:opacity-100">
                 <span className="rounded-full bg-white/95 px-4 py-2 text-sm font-bold text-black shadow-lg">

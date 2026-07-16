@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import FxLayer from "./components/FxLayer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,7 +30,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <FxLayer />
+        {children}
+      </body>
     </html>
   );
 }

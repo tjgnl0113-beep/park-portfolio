@@ -2,6 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Gallery from "../../components/Gallery";
+import Reveal from "../../components/Reveal";
+import CountUp from "../../components/CountUp";
+import CaseNav, { type CaseStep } from "../../components/CaseNav";
 import { projects, profile } from "../../data";
 
 const caseProjects = projects.filter((p) => p.slug && p.caseStudy);
@@ -37,8 +40,18 @@ export default function CaseStudyPage({
   const prev = caseProjects[(idx - 1 + n) % n];
   const next = caseProjects[(idx + 1) % n];
 
+  const navSteps: CaseStep[] = [
+    ...(cs.background ? [{ id: "cs-bg", label: "배경" }] : []),
+    { id: "cs-01", label: "문제" },
+    { id: "cs-02", label: "원인" },
+    { id: "cs-03", label: "해결" },
+    { id: "cs-04", label: "결과" },
+    { id: "cs-sum", label: "요약" },
+  ];
+
   return (
     <main>
+      <CaseNav steps={navSteps} />
       {/* 상단 바 */}
       <header className="sticky top-0 z-50 border-b border-white/[0.08] bg-ink/85 backdrop-blur">
         <nav className="wrap flex h-16 items-center justify-between">
@@ -93,75 +106,97 @@ export default function CaseStudyPage({
       <section className="section">
         <div className="wrap max-w-3xl">
           {cs.background && (
-            <div className="mb-14 border border-line border-l-4 border-l-accent bg-surface px-6 py-6 md:px-8 md:py-7">
-              <p className="text-[13px] font-bold text-accent">
-                배경 · 왜 만들었나
-              </p>
-              <p className="mt-3 text-lg leading-relaxed text-sub">
-                {cs.background}
-              </p>
-            </div>
-          )}
-
-          <Block step="01" title="문제" accent>
-            <p className="text-lg leading-relaxed">{cs.problem}</p>
-          </Block>
-
-          <Block step="02" title="원인 분석">
-            <p className="text-lg leading-relaxed text-sub">{cs.cause}</p>
-          </Block>
-
-          <Block step="03" title="해결">
-            <ul className="space-y-3">
-              {cs.solution.map((s, i) => (
-                <li key={i} className="flex gap-3 text-[17px] leading-relaxed">
-                  <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                  <span>{s}</span>
-                </li>
-              ))}
-            </ul>
-          </Block>
-
-          <Block step="04" title="결과" last>
-            {cs.metrics && cs.metrics.length > 0 && (
-              <div className="mb-6">
-                <div className="grid grid-cols-3 gap-3 border border-line bg-surface p-5">
-                  {cs.metrics.map((m) => (
-                    <div key={m.label} className="text-center">
-                      <div className="text-2xl font-extrabold tracking-tight text-accent md:text-3xl">
-                        {m.value}
-                      </div>
-                      <div className="mt-1 text-xs leading-snug text-sub">
-                        {m.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-2 text-xs text-faint">
-                  ※ 직접 만든 관리자 대시보드로 추적한 실측 데이터.
+            <Reveal>
+              <div id="cs-bg" className="mb-14 scroll-mt-24 border border-line border-l-4 border-l-accent bg-surface px-6 py-6 md:px-8 md:py-7">
+                <p className="text-[13px] font-bold text-accent">
+                  배경 · 왜 만들었나
+                </p>
+                <p className="mt-3 text-lg leading-relaxed text-sub">
+                  {cs.background}
                 </p>
               </div>
-            )}
-            <ul className="space-y-3">
-              {cs.result.map((r, i) => (
-                <li
-                  key={i}
-                  className="flex gap-3 bg-accentSoft px-5 py-4 text-[17px] font-medium leading-relaxed"
-                >
-                  <span className="text-accent">✓</span>
-                  <span>{r}</span>
-                </li>
-              ))}
-            </ul>
-          </Block>
+            </Reveal>
+          )}
+
+          <Reveal>
+            <Block id="cs-01" step="01" title="문제" accent>
+              <p className="text-lg leading-relaxed">{cs.problem}</p>
+            </Block>
+          </Reveal>
+
+          <Reveal>
+            <Block id="cs-02" step="02" title="원인 분석">
+              <p className="text-lg leading-relaxed text-sub">{cs.cause}</p>
+            </Block>
+          </Reveal>
+
+          <Reveal>
+            <Block id="cs-03" step="03" title="해결">
+              <ul className="space-y-3">
+                {cs.solution.map((s, i) => (
+                  <li key={i} className="flex gap-3 text-[17px] leading-relaxed">
+                    <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </Block>
+          </Reveal>
+
+          <Reveal>
+            <Block id="cs-04" step="04" title="결과" last>
+              {cs.metrics && cs.metrics.length > 0 && (
+                <div className="mb-6">
+                  <div className="grid grid-cols-3 gap-px border border-line bg-line">
+                    {cs.metrics.map((m) => (
+                      <div key={m.label} className="bg-surface p-4 text-center md:p-5">
+                        <div className="text-2xl font-extrabold tracking-tight md:text-3xl">
+                          <CountUp value={m.value} />
+                        </div>
+                        <div className="mt-1 text-xs leading-snug text-sub">
+                          {m.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-xs text-faint">
+                    ※ 직접 만든 관리자 대시보드로 추적한 실측 데이터.
+                  </p>
+                </div>
+              )}
+              <ul className="space-y-3">
+                {cs.result.map((r, i) => (
+                  <li
+                    key={i}
+                    className="flex gap-3 bg-accentSoft px-5 py-4 text-[17px] font-medium leading-relaxed"
+                  >
+                    <span className="text-accent">✓</span>
+                    <span>{r}</span>
+                  </li>
+                ))}
+              </ul>
+            </Block>
+          </Reveal>
 
           {/* 한 줄 결론 — 케이스를 닫는 테이크어웨이 */}
-          <div className="mt-14 bg-accent px-7 py-8 text-white md:px-10 md:py-9">
-            <p className="text-[13px] font-bold text-white/80">한 줄 요약</p>
-            <p className="mt-3 text-lg font-bold leading-relaxed md:text-xl">
-              {cs.takeaway}
-            </p>
-          </div>
+          <Reveal>
+            <div id="cs-sum" className="relative mt-14 scroll-mt-24 overflow-hidden bg-accent px-7 py-8 text-white md:px-10 md:py-9">
+              <div
+                aria-hidden
+                className="bandmq pointer-events-none absolute -top-2 left-0 flex w-max whitespace-nowrap text-[6rem] font-extrabold leading-none tracking-tight text-transparent"
+                style={{ WebkitTextStroke: "1.2px rgba(255,255,255,0.18)" }}
+              >
+                <span className="pr-8">TAKEAWAY&nbsp;✦&nbsp;TAKEAWAY&nbsp;✦&nbsp;TAKEAWAY&nbsp;✦&nbsp;</span>
+                <span className="pr-8">TAKEAWAY&nbsp;✦&nbsp;TAKEAWAY&nbsp;✦&nbsp;TAKEAWAY&nbsp;✦&nbsp;</span>
+              </div>
+              <div className="relative">
+                <p className="text-[13px] font-bold text-white/80">한 줄 요약</p>
+                <p className="mt-3 text-lg font-bold leading-relaxed md:text-xl">
+                  {cs.takeaway}
+                </p>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -231,12 +266,14 @@ function Meta({ label, value }: { label: string; value: string }) {
 }
 
 function Block({
+  id,
   step,
   title,
   children,
   accent,
   last,
 }: {
+  id?: string;
   step: string;
   title: string;
   children: React.ReactNode;
@@ -244,7 +281,7 @@ function Block({
   last?: boolean;
 }) {
   return (
-    <div className={last ? "" : "mb-14"}>
+    <div id={id} className={`scroll-mt-24 ${last ? "" : "mb-14"}`}>
       <div className="flex items-center gap-3">
         <span
           className={`text-sm font-extrabold ${
