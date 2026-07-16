@@ -44,7 +44,7 @@ body {
     @apply border border-line bg-surface p-7 transition-colors hover:border-faint/60;
   }
   .chip {
-    @apply inline-flex items-center rounded-full border border-line bg-white/[0.04] px-3.5 py-1.5 text-sm text-sub;
+    @apply inline-flex items-center rounded-full border border-line bg-white/[0.04] px-3.5 py-1.5 text-sm text-sub transition-colors hover:border-accent/60 hover:text-white;
   }
 }
 
@@ -57,18 +57,59 @@ body {
   animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* 스크롤 리빌 — Reveal 컴포넌트가 .in을 토글 */
+/* 스크롤 리빌 — Reveal 컴포넌트가 .in을 토글. 히어로 입장과 같은 블러+상승 문법 */
 .reveal {
   opacity: 0;
   transform: translateY(26px);
+  filter: blur(5px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal.in {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
 }
+/* stagger: 컨테이너 대신 자식들이 시차를 두고 떠오른다 */
+.reveal.stagger { opacity: 1; transform: none; filter: none; transition: none; }
+.reveal.stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(5px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.stagger.in > * { opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal.stagger > *:nth-child(2) { transition-delay: 0.08s; }
+.reveal.stagger > *:nth-child(3) { transition-delay: 0.16s; }
+.reveal.stagger > *:nth-child(4) { transition-delay: 0.24s; }
+.reveal.stagger > *:nth-child(5) { transition-delay: 0.32s; }
+.reveal.stagger > *:nth-child(6) { transition-delay: 0.4s; }
+.reveal.stagger > *:nth-child(7) { transition-delay: 0.48s; }
+.reveal.stagger > *:nth-child(8) { transition-delay: 0.56s; }
+
+/* 전역 필름 그레인 (FxLayer) */
+@keyframes fxgrain {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 3%); }
+  50% { transform: translate(3%, -2%); }
+  75% { transform: translate(-3%, -3%); }
+}
+.fxgrain { animation: fxgrain 7s steps(8) infinite; }
+
+/* 차별점 밴드 뒤로 흐르는 거대 아웃라인 타이포 */
+@keyframes bandmq {
+  to { transform: translateX(-50%); }
+}
+.bandmq {
+  animation: bandmq 28s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
+  .reveal, .reveal.stagger > * { opacity: 1; transform: none; filter: none; transition: none; }
   .rise { animation: none; }
+  .bandmq { animation: none; }
+  .fxgrain { animation: none; }
 }

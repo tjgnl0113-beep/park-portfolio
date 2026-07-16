@@ -26,12 +26,10 @@ function parseValue(v: string) {
 export default function HeroV2() {
   const heroRef = useRef<HTMLElement>(null);
   const cloudRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const hero = heroRef.current!;
     const cloud = cloudRef.current!;
-    const glow = glowRef.current!;
     const rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // 숫자 카운트업
@@ -56,29 +54,14 @@ export default function HeroV2() {
 
     if (rm) return;
 
-    // 커서 글로우 (lerp) + 클라우드 패럴랙스
-    let mx = innerWidth / 2, my = innerHeight * 0.4, gx = mx, gy = my, raf = 0;
-    const loop = () => {
-      gx += (mx - gx) * 0.07;
-      gy += (my - gy) * 0.07;
-      glow.style.left = `${gx}px`;
-      glow.style.top = `${gy}px`;
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
+    // 클라우드 패럴랙스 (글로우·그레인은 전역 FxLayer가 담당)
     const onMove = (e: MouseEvent) => {
-      const r = hero.getBoundingClientRect();
-      mx = e.clientX - r.left;
-      my = e.clientY - r.top;
       const x = e.clientX / innerWidth - 0.5;
       const y = e.clientY / innerHeight - 0.5;
       cloud.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 7}deg) translateX(${x * -30}px) translateY(${y * -18}px)`;
     };
     hero.addEventListener("mousemove", onMove);
-    return () => {
-      cancelAnimationFrame(raf);
-      hero.removeEventListener("mousemove", onMove);
-    };
+    return () => hero.removeEventListener("mousemove", onMove);
   }, []);
 
   // headline: "…검색을 장악하고,\n…" → 줄 분리 + '장악' 강조
@@ -90,9 +73,6 @@ export default function HeroV2() {
 
   return (
     <section id="top" ref={heroRef} className={s.hero}>
-      <div className={s.grain} aria-hidden />
-      <div ref={glowRef} className={s.glow} aria-hidden />
-
       <div ref={cloudRef} className={s.cloud} aria-hidden>
         {CLOUD_METRICS.map((m, i) => {
           const parsed = parseValue(m.value);

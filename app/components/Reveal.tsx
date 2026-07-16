@@ -6,9 +6,11 @@ import { useEffect, useRef } from "react";
 export default function Reveal({
   children,
   className = "",
+  stagger = false,
 }: {
   children: React.ReactNode;
   className?: string;
+  stagger?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -29,7 +31,7 @@ export default function Reveal({
   }, []);
 
   return (
-    <div ref={ref} className={`reveal ${className}`}>
+    <div ref={ref} className={`reveal ${stagger ? "stagger" : ""} ${className}`}>
       {children}
     </div>
   );
