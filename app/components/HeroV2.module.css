@@ -69,6 +69,7 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .fcard b i {
   font-style: normal;
@@ -234,7 +235,10 @@
   .headline { white-space: normal; }
 }
 @media (max-width: 720px) {
-  .p1, .p5, .p6 { display: none; }
-  .fcard { width: 165px; }
-  .fcard b { font-size: 25px; }
+  .p5, .p6 { display: none; }
+  .p1 { top: 9%; left: 5%; transform: translateZ(-160px) rotateY(6deg); }
+  .p3 { top: 13%; left: 62%; }
+  .fcard { width: 160px; padding: 14px 16px; }
+  .fcard b { font-size: 24px; }
+  .fcard span { font-size: 11.5px; }
 }

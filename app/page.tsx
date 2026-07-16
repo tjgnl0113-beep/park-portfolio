@@ -39,7 +39,7 @@ function Metrics() {
         <Reveal className="mt-12 grid grid-cols-2 gap-px border border-line bg-line md:grid-cols-3" stagger>
           {metrics.map((m) => (
             <div key={m.label} className="group bg-surface p-5 transition-colors hover:bg-[#16161a] md:p-7">
-              <div className="text-4xl font-extrabold tracking-tight md:text-[2.6rem]">
+              <div className="whitespace-nowrap text-[1.9rem] font-extrabold tracking-tight sm:text-4xl md:text-[2.6rem]">
                 <CountUp value={m.value} />
               </div>
               <div className="mt-3 font-bold">{m.label}</div>
