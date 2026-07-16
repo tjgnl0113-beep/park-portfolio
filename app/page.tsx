@@ -1,86 +1,21 @@
-import { profile, metrics, projects, career, skills } from "./data";
+import Link from "next/link";
+import SiteNav from "./components/SiteNav";
+import HeroV2 from "./components/HeroV2";
+import { profile, metrics, evidence, projects, projectGroups, career, skills, type Project } from "./data";
 
 export default function Home() {
   return (
     <main>
-      <Nav />
-      <Hero />
+      <SiteNav name={profile.name} role={profile.role} email={profile.email} />
+      <HeroV2 />
       <Metrics />
+      <MarketingResults />
       <Differentiator />
       <Projects />
       <Career />
       <Skills />
       <Contact />
     </main>
-  );
-}
-
-function Nav() {
-  const links = [
-    ["성과", "#metrics"],
-    ["프로젝트", "#projects"],
-    ["경력", "#career"],
-    ["스킬", "#skills"],
-    ["연락처", "#contact"],
-  ];
-  return (
-    <header className="sticky top-0 z-50 border-b border-black/[0.06] bg-paper/80 backdrop-blur">
-      <nav className="wrap flex h-16 items-center justify-between">
-        <a href="#top" className="text-lg font-extrabold tracking-tight">
-          {profile.name}
-          <span className="ml-2 hidden text-sm font-medium text-sub sm:inline">
-            {profile.role}
-          </span>
-        </a>
-        <ul className="flex items-center gap-5 text-sm text-sub">
-          {links.map(([label, href]) => (
-            <li key={href} className="hidden md:block">
-              <a href={href} className="hover:text-ink">
-                {label}
-              </a>
-            </li>
-          ))}
-          <li>
-            <a
-              href={`mailto:${profile.email}`}
-              className="rounded-full bg-ink px-4 py-2 font-semibold text-white hover:bg-black"
-            >
-              연락하기
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-  );
-}
-
-function Hero() {
-  return (
-    <section id="top" className="section pt-20 md:pt-28">
-      <div className="wrap">
-        <p className="eyebrow rise">{profile.role}</p>
-        <h1 className="rise mt-4 whitespace-pre-line text-4xl font-extrabold leading-[1.15] tracking-tight md:text-6xl">
-          {profile.headline}
-        </h1>
-        <p className="rise mt-7 max-w-2xl text-lg leading-relaxed text-sub">
-          {profile.summary}
-        </p>
-        <div className="rise mt-9 flex flex-wrap gap-3">
-          <a
-            href="#projects"
-            className="rounded-full bg-accent px-6 py-3 font-semibold text-white hover:brightness-95"
-          >
-            대표 프로젝트 보기
-          </a>
-          <a
-            href="#contact"
-            className="rounded-full border border-black/15 px-6 py-3 font-semibold hover:bg-white"
-          >
-            연락처
-          </a>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -93,14 +28,65 @@ function Metrics() {
         <p className="mt-3 text-sub">
           법률·전문직 고관여 시장에서 만든 실제 전환 성과.
         </p>
-        <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3">
+        <div className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
           {metrics.map((m) => (
-            <div key={m.label}>
+            <div
+              key={m.label}
+              className="rounded-2xl border border-black/[0.07] bg-paper p-5 md:p-6"
+            >
               <div className="text-4xl font-extrabold tracking-tight text-accent md:text-5xl">
                 {m.value}
               </div>
-              <div className="mt-2 font-semibold">{m.label}</div>
-              <div className="mt-1 text-sm text-sub">{m.note}</div>
+              <div className="mt-3 font-bold">{m.label}</div>
+              <div className="mt-1 text-sm leading-relaxed text-sub">{m.note}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MarketingResults() {
+  return (
+    <section id="results" className="section bg-accentSoft/40">
+      <div className="wrap">
+        <p className="eyebrow">마케팅 실적</p>
+        <h2 className="h-section">숫자 뒤의, 실제 증거</h2>
+        <p className="mt-3 max-w-2xl text-sub">
+          법률 분야 블로그·바이럴 마케팅으로 만든 검증된 성과. 노출이 아니라 검색
+          장악과 상담 전환으로 이어진 실제 결과입니다.
+        </p>
+
+        <div className="mt-12 space-y-8">
+          {evidence.map((e, i) => (
+            <div
+              key={e.title}
+              className="grid gap-6 rounded-2xl border border-black/[0.07] bg-white p-5 md:grid-cols-[1.3fr_1fr] md:p-6"
+            >
+              {/* 증거 이미지 (없으면 플레이스홀더) */}
+              {e.src ? (
+                <div className="overflow-hidden rounded-xl border border-black/[0.06] bg-black/[0.03]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={e.src} alt={e.title} className="w-full" />
+                </div>
+              ) : (
+                <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-black/15 bg-paper text-center text-sm text-sub">
+                  증거 이미지 추가 예정
+                  <br />
+                  (PDF에서 추출)
+                </div>
+              )}
+
+              <div className="flex flex-col justify-center">
+                <span className="chip mb-3 w-fit !border-accent/20 !bg-accentSoft !text-accent">
+                  {e.tag}
+                </span>
+                <h3 className="text-xl font-bold leading-snug">{e.title}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-sub">
+                  {e.note}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -114,7 +100,7 @@ function Differentiator() {
     <section className="section">
       <div className="wrap">
         <div className="rounded-3xl bg-ink px-8 py-14 text-paper md:px-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+          <p className="text-xs font-semibold tracking-[0.08em] text-accent">
             나의 차별점
           </p>
           <h2 className="mt-4 text-2xl font-bold leading-snug md:text-4xl">
@@ -141,55 +127,116 @@ function Projects() {
         <p className="mt-3 max-w-2xl text-sub">
           각 프로젝트는 이력서 속 마케팅 역량을, 실제로 만든 결과물로 증명합니다.
         </p>
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {projects.map((p) => (
-            <article key={p.title} className="card flex flex-col">
-              <span className="chip mb-4 w-fit !border-accent/20 !bg-accentSoft !text-accent">
-                {p.tag}
-              </span>
-              <h3 className="text-xl font-bold">{p.title}</h3>
-              <p className="mt-2 text-sub">{p.oneLiner}</p>
 
-              <div className="mt-4 rounded-xl bg-paper px-4 py-3 text-sm">
-                <span className="font-semibold text-accent">증명하는 역량 ·</span>{" "}
-                <span className="text-sub">{p.proves}</span>
+        {projectGroups.map((g) => {
+          const items = projects.filter((p) => p.group === g.key);
+          if (!items.length) return null;
+          return (
+            <div key={g.key} className="mt-16 first:mt-12">
+              <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <h3 className="text-xl font-extrabold tracking-tight">{g.title}</h3>
+                <span className="text-sm text-sub">{g.desc}</span>
               </div>
-
-              <ul className="mt-5 space-y-2.5 text-sm leading-relaxed">
-                {p.bullets.map((b, i) => (
-                  <li key={i} className="flex gap-2.5">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-6 flex flex-wrap gap-2 border-t border-black/[0.06] pt-5">
-                {p.stack.map((s) => (
-                  <span
-                    key={s}
-                    className="rounded-md bg-black/[0.04] px-2.5 py-1 text-xs text-sub"
-                  >
-                    {s}
-                  </span>
+              <div className="mt-7 grid gap-6 md:grid-cols-2">
+                {items.map((p) => (
+                  <ProjectCard key={p.title} p={p} />
                 ))}
               </div>
-
-              {p.live && (
-                <a
-                  href={p.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 text-sm font-semibold text-accent hover:underline"
-                >
-                  라이브 보기 →
-                </a>
-              )}
-            </article>
-          ))}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
+  );
+}
+
+function ProjectCard({ p }: { p: Project }) {
+  const cover = p.cover ?? p.images?.[0]?.src;
+  const shotCount = p.images?.length ?? 0;
+  return (
+    <article className="card flex flex-col overflow-hidden !p-0">
+      {/* 썸네일: 실제 화면 캡처 or 그라데이션 커버 */}
+      {cover ? (
+        <div className="relative aspect-[16/10] overflow-hidden border-b border-black/[0.06] bg-black/[0.03]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={cover}
+            alt={`${p.title} 화면`}
+            className="h-full w-full object-cover object-top"
+          />
+          {shotCount > 1 && (
+            <span className="absolute bottom-2.5 right-2.5 rounded-full bg-black/65 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">
+              + {shotCount - 1}장
+            </span>
+          )}
+        </div>
+      ) : (
+        <div className="flex aspect-[16/10] flex-col items-center justify-center gap-2 border-b border-black/[0.06] bg-gradient-to-br from-ink to-[#27324d]">
+          <span className="text-xs font-semibold tracking-[0.08em] text-accent/90">
+            {p.tag}
+          </span>
+          <span className="px-6 text-center text-lg font-bold text-white/90">
+            {p.title}
+          </span>
+        </div>
+      )}
+
+      <div className="flex flex-1 flex-col p-7">
+        <span className="chip mb-4 w-fit !border-accent/20 !bg-accentSoft !text-accent">
+          {p.tag}
+        </span>
+        <h3 className="text-xl font-bold">{p.title}</h3>
+        <p className="mt-2 text-sub">{p.oneLiner}</p>
+
+        <div className="mt-4 rounded-xl bg-paper px-4 py-3 text-sm">
+          <span className="font-semibold text-accent">증명하는 역량 ·</span>{" "}
+          <span className="text-sub">{p.proves}</span>
+        </div>
+
+        <ul className="mt-5 space-y-2.5 text-sm leading-relaxed">
+          {p.bullets.map((b, i) => (
+            <li key={i} className="flex gap-2.5">
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto">
+          <div className="mt-6 flex flex-wrap gap-2 border-t border-black/[0.06] pt-5">
+            {p.stack.map((s) => (
+              <span
+                key={s}
+                className="rounded-md bg-black/[0.04] px-2.5 py-1 text-xs text-sub"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-5 flex items-center gap-4 text-sm font-semibold">
+            {p.slug && (
+              <Link
+                href={`/projects/${p.slug}`}
+                className="text-accent hover:underline"
+              >
+                케이스 스터디 보기 →
+              </Link>
+            )}
+            {p.live && (
+              <a
+                href={p.live}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sub hover:text-ink"
+              >
+                라이브 ↗
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </article>
   );
 }
 

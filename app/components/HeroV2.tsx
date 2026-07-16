@@ -1,0 +1,149 @@
+"use client";
+
+// HeroV2 — 다크 프리미엄(Vivid Motion) × 3D 카드 클라우드(Michael Gatt) × 연출 레이어.
+// 지표·태그는 data.ts 실측값을 그대로 사용한다.
+import { useEffect, useRef } from "react";
+import { profile, metrics } from "../data";
+import s from "./HeroV2.module.css";
+
+const CLOUD_METRICS = [metrics[0], metrics[1], metrics[2], metrics[4]]; // 60% / 45% / 600건+ / 월 100건+
+const CLOUD_TAGS = ["변제금 진단 리드 퍼널", "발행 스튜디오 · SEO 대시보드", "콘텐츠 운영 자동화 도구"];
+const MARQUEE: [string, string][] = [
+  ["검색 장악", "키워드 1면 60% 점유"],
+  ["리드 퍼널", "상담 완료율 45%"],
+  ["콘텐츠 SEO", "월 100건+ 발행 파이프라인"],
+  ["자동화", "발행 스튜디오 · 순위 추적"],
+  ["직접 개발", "Next.js · Supabase"],
+];
+
+// "월 100건+" → { pre:"월 ", n:100, suf:"건+" } 형태로 분해 (카운트업용)
+function parseValue(v: string) {
+  const m = v.match(/^(\D*)([\d,]+)(\D*)$/);
+  if (!m) return null;
+  return { pre: m[1], n: parseInt(m[2].replace(/,/g, ""), 10), suf: m[3] };
+}
+
+export default function HeroV2() {
+  const heroRef = useRef<HTMLElement>(null);
+  const cloudRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current!;
+    const cloud = cloudRef.current!;
+    const glow = glowRef.current!;
+    const rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // 숫자 카운트업
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+    hero.querySelectorAll<HTMLElement>("[data-count]").forEach((el, i) => {
+      const parsed = parseValue(el.dataset.count!);
+      if (!parsed || rm) return;
+      const render = (v: number) =>
+        (el.innerHTML = `${parsed.pre}${v}<i>${parsed.suf}</i>`);
+      render(0);
+      const t = setTimeout(() => {
+        const t0 = performance.now();
+        const tick = (now: number) => {
+          const k = Math.min(1, (now - t0) / 1300);
+          render(Math.round(parsed.n * easeOut(k)));
+          if (k < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }, 700 + i * 120);
+      return () => clearTimeout(t);
+    });
+
+    if (rm) return;
+
+    // 커서 글로우 (lerp) + 클라우드 패럴랙스
+    let mx = innerWidth / 2, my = innerHeight * 0.4, gx = mx, gy = my, raf = 0;
+    const loop = () => {
+      gx += (mx - gx) * 0.07;
+      gy += (my - gy) * 0.07;
+      glow.style.left = `${gx}px`;
+      glow.style.top = `${gy}px`;
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    const onMove = (e: MouseEvent) => {
+      const r = hero.getBoundingClientRect();
+      mx = e.clientX - r.left;
+      my = e.clientY - r.top;
+      const x = e.clientX / innerWidth - 0.5;
+      const y = e.clientY / innerHeight - 0.5;
+      cloud.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 7}deg) translateX(${x * -30}px) translateY(${y * -18}px)`;
+    };
+    hero.addEventListener("mousemove", onMove);
+    return () => {
+      cancelAnimationFrame(raf);
+      hero.removeEventListener("mousemove", onMove);
+    };
+  }, []);
+
+  // headline: "…검색을 장악하고,\n…" → 줄 분리 + '장악' 강조
+  const lines = profile.headline.split("\n").map((ln) =>
+    ln.split("장악").flatMap((part, i) =>
+      i === 0 ? [part] : [<em key={i}>장악</em>, part]
+    )
+  );
+
+  return (
+    <section id="top" ref={heroRef} className={s.hero}>
+      <div className={s.grain} aria-hidden />
+      <div ref={glowRef} className={s.glow} aria-hidden />
+
+      <div ref={cloudRef} className={s.cloud} aria-hidden>
+        {CLOUD_METRICS.map((m, i) => {
+          const parsed = parseValue(m.value);
+          return (
+            <div key={m.label} className={`${s.fcard} ${s["p" + (i + 1)]}`}>
+              <b data-count={parsed ? m.value : undefined}>
+                {parsed ? (
+                  <>{parsed.pre}{parsed.n}<i>{parsed.suf}</i></>
+                ) : (
+                  m.value
+                )}
+              </b>
+              <span>{m.label}</span>
+            </div>
+          );
+        })}
+        {CLOUD_TAGS.map((t, i) => (
+          <div key={t} className={`${s.fcard} ${s.tagcard} ${s["p" + (i + 5)]}`}>
+            <span>{t}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className={s.center}>
+        <p className={s.eyebrow}>Contents · Performance Marketer</p>
+        <h1 className={s.headline}>
+          {lines.map((ln, i) => (
+            <span key={i} className={s.ln}>
+              <span>{ln}</span>
+            </span>
+          ))}
+        </h1>
+        <p className={s.role}>
+          <b>{profile.name}</b> — 고관여 시장 3년 6개월, 성과를 시스템으로
+          만드는 마케터
+        </p>
+        <div className={s.ctas}>
+          <a href="#projects" className={s.ctaMain}>대표 프로젝트 보기</a>
+          <a href="#contact" className={s.ctaGhost}>연락처</a>
+        </div>
+      </div>
+
+      <div className={s.marquee} aria-hidden>
+        <div className={s.mq}>
+          {[...MARQUEE, ...MARQUEE].map(([k, d], i) => (
+            <span key={i}>
+              <b>{k}</b> {d} <i> ✦</i>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

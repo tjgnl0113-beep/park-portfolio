@@ -5,10 +5,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0E1320",
+        ink: "#0B0B0C",
         paper: "#FBFAF7",
-        accent: "#1F5EFF",
-        accentSoft: "#EAF0FF",
+        accent: "#E63A0F",
+        accentSoft: "#FCEAE4",
         sub: "#5B6477",
       },
       fontFamily: {
