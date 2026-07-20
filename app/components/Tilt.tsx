@@ -1,15 +1,18 @@
 "use client";
 
-// 마우스 위치를 따라 카드가 3D로 기우는 래퍼 — 히어로 클라우드의 문법을 본문 카드로.
+// 3D 카드 시스템 — 마우스 위치를 CSS 변수로 흘려보내면
+// globals.css의 .tilt3d가 딥 틸트 + 글레어 스윕 + 레이어 분리(data-depth)를 만든다.
 import { useRef } from "react";
 
 export default function Tilt({
   children,
-  max = 5,
+  max = 9,
+  glare = true,
   className = "",
 }: {
   children: React.ReactNode;
   max?: number;
+  glare?: boolean;
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -18,24 +21,24 @@ export default function Tilt({
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = ref.current!;
     const r = el.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    el.style.transform = `perspective(900px) rotateX(${-y * max}deg) rotateY(${x * max}deg) translateY(-2px)`;
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    el.style.setProperty("--rx", `${-(py - 0.5) * max}deg`);
+    el.style.setProperty("--ry", `${(px - 0.5) * max}deg`);
+    el.style.setProperty("--gx", `${px * 100}%`);
+    el.style.setProperty("--gy", `${py * 100}%`);
   };
+
   const onLeave = () => {
     const el = ref.current!;
-    el.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateY(0)";
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
   };
 
   return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className={className}
-      style={{ transition: "transform .45s cubic-bezier(.16,1,.3,1)", willChange: "transform" }}
-    >
+    <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} className={`tilt3d ${className}`}>
       {children}
+      {glare && <span className="tilt3d-glare" aria-hidden />}
     </div>
   );
 }

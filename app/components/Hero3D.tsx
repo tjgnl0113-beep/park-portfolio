@@ -8,7 +8,7 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { RoundedBox, Text, useTexture } from "@react-three/drei";
+import { RoundedBox, Text } from "@react-three/drei";
 import { Physics, RigidBody, BallCollider, CuboidCollider, type RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 import { metrics } from "../data";
@@ -25,7 +25,6 @@ type CardSpec = {
   rot: number;
   value?: string;
   label?: string;
-  img?: boolean;
   w: number;
   h: number;
 };
@@ -40,18 +39,7 @@ function buildCards(): CardSpec[] {
     { home: [-2.0, 2.7, -2.4], rot: 0.06, label: "변제금 진단 리드 퍼널", w: 3.0, h: 0.8 },
     { home: [2.2, -2.9, -1.8], rot: -0.06, label: "발행 스튜디오 · SEO 대시보드", w: 3.4, h: 0.8 },
     { home: [0.3, 3.1, -2.8], rot: 0.04, label: "콘텐츠 운영 자동화 도구", w: 3.1, h: 0.8 },
-    { home: [0.0, -2.6, -0.9], rot: -0.04, img: true, w: 2.4, h: 1.6 }, // 아바타 카드
   ];
-}
-
-function AvatarFace({ w, h }: { w: number; h: number }) {
-  const tex = useTexture("/me.jpg");
-  return (
-    <mesh position={[0, 0, 0.075]}>
-      <planeGeometry args={[w * 0.94, h * 0.88]} />
-      <meshStandardMaterial map={tex} roughness={0.5} />
-    </mesh>
-  );
 }
 
 function FloatCard({ spec, seed }: { spec: CardSpec; seed: number }) {
@@ -94,9 +82,7 @@ function FloatCard({ spec, seed }: { spec: CardSpec; seed: number }) {
         <RoundedBox args={[spec.w + 0.02, spec.h + 0.02, 0.1]} radius={0.03} smoothness={3}>
           <meshBasicMaterial color="#242428" wireframe transparent opacity={0.35} />
         </RoundedBox>
-        {spec.img ? (
-          <AvatarFace w={spec.w} h={spec.h} />
-        ) : spec.value ? (
+        {spec.value ? (
           <>
             <Text font={FONT_BOLD} fontSize={0.52} color="#ffffff" anchorX="left" anchorY="middle" position={[-spec.w / 2 + 0.22, 0.18, 0.09]}>
               {spec.value}

@@ -38,17 +38,17 @@ function Metrics() {
           </p>
         </Reveal>
         {/* 모바일: 가로 스냅 캐러셀 / 데스크톱: 그리드 */}
-        <Reveal className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-px overflow-x-auto border border-line bg-line md:grid md:grid-cols-3 md:overflow-visible" stagger>
+        <Reveal className="no-scrollbar c3e mt-12 flex snap-x snap-mandatory gap-px overflow-x-auto border border-line bg-line md:grid md:grid-cols-3 md:overflow-visible" stagger>
           {metrics.map((m) => (
-            <div key={m.label} className="group w-[74vw] shrink-0 snap-center bg-surface p-6 transition-colors hover:bg-[#16161a] md:w-auto md:shrink md:p-7">
-              <div className="whitespace-nowrap text-4xl font-extrabold tracking-tight md:text-[2.6rem]">
+            <Tilt key={m.label} max={11} className="group w-[74vw] shrink-0 snap-center bg-surface p-6 transition-colors hover:bg-[#16161a] md:w-auto md:shrink md:p-7">
+              <div data-depth="2" className="whitespace-nowrap text-4xl font-extrabold tracking-tight md:text-[2.6rem]">
                 <CountUp value={m.value} />
               </div>
-              <div className="mt-3 font-bold">{m.label}</div>
+              <div data-depth="1" className="mt-3 font-bold">{m.label}</div>
               <div className="mt-1 text-sm leading-relaxed text-faint transition-colors group-hover:text-sub">
                 {m.note}
               </div>
-            </div>
+            </Tilt>
           ))}
         </Reveal>
         <p className="mt-3 text-xs text-faint md:hidden">옆으로 넘겨 보세요 →</p>
@@ -72,8 +72,8 @@ function MarketingResults() {
 
         <div className="mt-12 space-y-8">
           {evidence.map((e) => (
-            <Reveal key={e.title}>
-              <Tilt max={2.5} className="spar grid gap-6 border border-line bg-surface p-5 md:grid-cols-[1.3fr_1fr] md:p-6">
+            <Reveal key={e.title} className="c3e">
+              <Tilt max={6} className="spar grid gap-6 border border-line bg-surface p-5 md:grid-cols-[1.3fr_1fr] md:p-6">
                 {/* 증거 이미지 (없으면 플레이스홀더) */}
                 {e.src ? (
                   <div className="overflow-hidden border border-line bg-black/30">
@@ -89,10 +89,10 @@ function MarketingResults() {
                 )}
 
                 <div className="flex flex-col justify-center">
-                  <span className="chip mb-3 w-fit !border-accent/30 !bg-accentSoft !text-accent">
+                  <span data-depth="1" className="chip mb-3 w-fit !border-accent/30 !bg-accentSoft !text-accent">
                     {e.tag}
                   </span>
-                  <h3 className="text-xl font-bold leading-snug text-white">{e.title}</h3>
+                  <h3 data-depth="2" className="text-xl font-bold leading-snug text-white">{e.title}</h3>
                   <p className="mt-3 text-[15px] leading-relaxed text-sub">
                     {e.note}
                   </p>
@@ -177,9 +177,9 @@ function Method() {
           </p>
         </Reveal>
         {/* 데스크톱: 4열 그리드 */}
-        <Reveal className="mt-12 hidden gap-px border border-line bg-line sm:grid sm:grid-cols-2 lg:grid-cols-4" stagger>
+        <Reveal className="c3e mt-12 hidden gap-px border border-line bg-line sm:grid sm:grid-cols-2 lg:grid-cols-4" stagger>
           {METHOD_STEPS.map((st) => (
-            <div key={st.n} className="group relative overflow-hidden bg-surface p-6 transition-colors hover:bg-[#16161a] md:p-7">
+            <Tilt key={st.n} max={10} className="group relative overflow-hidden bg-surface p-6 transition-colors hover:bg-[#16161a] md:p-7">
               <div
                 aria-hidden
                 className="pointer-events-none absolute -right-2 -top-6 text-[5.5rem] font-extrabold leading-none text-transparent transition-colors"
@@ -190,7 +190,7 @@ function Method() {
               <div className="text-[13px] font-bold text-accent">{st.n}</div>
               <h3 className="mt-2 text-lg font-extrabold text-white">{st.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-sub">{st.desc}</p>
-            </div>
+            </Tilt>
           ))}
         </Reveal>
       </div>
@@ -293,8 +293,8 @@ function Projects() {
               </Reveal>
               <div className="mt-7 grid gap-6 md:grid-cols-2">
                 {items.map((p) => (
-                  <Reveal key={p.title}>
-                    <Tilt max={4} className="spar h-full">
+                  <Reveal key={p.title} className="c3e">
+                    <Tilt max={8} className="spar h-full">
                       <ProjectCard p={p} />
                     </Tilt>
                   </Reveal>
