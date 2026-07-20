@@ -182,10 +182,16 @@ export default function Gallery({
         {images.map((shot, i) => (
           <figure
             key={i}
-            className={`group flex flex-col overflow-hidden border border-line bg-surface ${
+            className={`group flex flex-col overflow-hidden rounded-lg border border-[#2e2e33] bg-[#141416] shadow-[0_24px_60px_-24px_rgba(0,0,0,0.8)] ${
               i === 0 ? "md:col-span-2" : ""
             }`}
           >
+            {/* 미니 브라우저 크롬 */}
+            <div className="flex h-8 shrink-0 items-center gap-1.5 border-b border-[#26262b] bg-[#1a1a1e] px-3">
+              <span className="h-2 w-2 rounded-full bg-accent/80" />
+              <span className="h-2 w-2 rounded-full bg-[#3a3a40]" />
+              <span className="h-2 w-2 rounded-full bg-[#3a3a40]" />
+            </div>
             <button
               type="button"
               onClick={() => setIdx(i)}
@@ -208,7 +214,7 @@ export default function Gallery({
             </button>
 
             {(shot.caption || shot.note) && (
-              <figcaption className="border-t border-line bg-surface px-5 py-4">
+              <figcaption className="border-t border-[#26262b] bg-[#141416] px-5 py-4">
                 {shot.caption && (
                   <div className="flex items-center gap-2 font-semibold">
                     <span className="rounded bg-accentSoft px-2 py-0.5 text-xs font-bold text-accent">

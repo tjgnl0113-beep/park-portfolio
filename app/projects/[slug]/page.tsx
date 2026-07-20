@@ -27,26 +27,52 @@ export function generateMetadata({
   };
 }
 
-/* 풀블리드 쇼케이스 밴드 — 챕터 사이의 숨 고르기 */
+/* 쇼케이스 밴드 — 스크린샷을 다크 브라우저 프레임 + 글로우 무대에 올린 "제품 샷" */
 function Band({ src, caption }: { src: string; caption?: string }) {
+  // 세로형(모바일) 스크린샷은 폭을 좁혀 밀도 유지
+  const size = IMG_SIZES[src];
+  const portrait = size ? size.h > size.w * 1.05 : false;
   return (
     <Reveal className="c3e">
-      <figure className="mt-20 w-full">
-        {caption && (
-          <figcaption className="mx-auto flex max-w-6xl items-center gap-2.5 px-6 pb-3">
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-            <span className="text-[13px] text-sub">{caption}</span>
-          </figcaption>
-        )}
-        <div className="border-y border-line bg-black/30">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={src}
-            alt={caption ?? ""}
-            width={IMG_SIZES[src]?.w}
-            height={IMG_SIZES[src]?.h}
-            className="mx-auto h-auto max-h-[82vh] w-auto max-w-full"
+      <figure className="mt-20 w-full px-6">
+        <div className={`relative mx-auto ${portrait ? "max-w-md" : "max-w-5xl"}`}>
+          {/* 버밀리언 글로우 무대 */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-x-16 -inset-y-10 opacity-60"
+            style={{
+              background:
+                "radial-gradient(55% 65% at 50% 55%, rgba(230,58,15,0.16), rgba(230,58,15,0.04) 55%, transparent 75%)",
+              filter: "blur(28px)",
+            }}
           />
+          {/* 브라우저 프레임 */}
+          <div className="relative overflow-hidden rounded-lg border border-[#2e2e33] bg-[#141416] shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)]">
+            <div className="flex h-9 items-center gap-1.5 border-b border-[#26262b] bg-[#1a1a1e] px-3.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-accent/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#3a3a40]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#3a3a40]" />
+              {caption && (
+                <span className="mx-auto max-w-[70%] truncate rounded-md bg-black/30 px-3 py-0.5 text-[11px] text-faint">
+                  {caption}
+                </span>
+              )}
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={src}
+              alt={caption ?? ""}
+              width={IMG_SIZES[src]?.w}
+              height={IMG_SIZES[src]?.h}
+              className="h-auto max-h-[78vh] w-full object-contain object-top"
+            />
+          </div>
+          {caption && (
+            <figcaption className="mt-3.5 flex items-center justify-center gap-2.5">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+              <span className="text-[13px] text-sub">{caption}</span>
+            </figcaption>
+          )}
         </div>
       </figure>
     </Reveal>

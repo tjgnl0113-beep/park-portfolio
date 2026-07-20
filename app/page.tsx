@@ -78,7 +78,12 @@ function MarketingResults() {
               <Tilt max={6} className="spar grid gap-6 border border-line bg-surface p-5 md:grid-cols-[1.3fr_1fr] md:p-6">
                 {/* 증거 이미지 (없으면 플레이스홀더) */}
                 {e.src ? (
-                  <div className="overflow-hidden border border-line bg-black/30">
+                  <div className="overflow-hidden rounded-lg border border-[#2e2e33] bg-[#141416] shadow-[0_24px_60px_-24px_rgba(0,0,0,0.8)]">
+                    <div className="flex h-8 items-center gap-1.5 border-b border-[#26262b] bg-[#1a1a1e] px-3">
+                      <span className="h-2 w-2 rounded-full bg-accent/80" />
+                      <span className="h-2 w-2 rounded-full bg-[#3a3a40]" />
+                      <span className="h-2 w-2 rounded-full bg-[#3a3a40]" />
+                    </div>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={e.src}
