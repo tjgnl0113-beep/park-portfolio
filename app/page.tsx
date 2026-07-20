@@ -227,29 +227,23 @@ function About() {
             </Reveal>
           </div>
 
-          {/* 사진 + 원칙 */}
+          {/* 프로필 팩트 + 원칙 */}
           <div className="flex flex-col gap-6">
             <Reveal>
-              {about.photo ? (
-                <div className="overflow-hidden border border-line bg-surface">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={about.photo} alt={`${profile.name} 프로필`} className="w-full object-cover" />
+              <Tilt max={7} className="border border-line bg-surface">
+                <div className="flex items-baseline justify-between border-b border-line px-6 py-5">
+                  <div data-depth="1" className="text-2xl font-extrabold text-white">{profile.name}</div>
+                  <div className="text-sm text-sub">{profile.role}</div>
                 </div>
-              ) : (
-                <div className="relative flex aspect-[4/3] items-end overflow-hidden border border-line bg-surface p-6">
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -right-3 -top-8 text-[7rem] font-extrabold leading-none text-transparent"
-                    style={{ WebkitTextStroke: "1.2px rgba(230,58,15,0.3)" }}
-                  >
-                    PARK
-                  </div>
-                  <div>
-                    <div className="text-2xl font-extrabold text-white">{profile.name}</div>
-                    <div className="mt-1 text-sm text-sub">{profile.role} · {profile.location}</div>
-                  </div>
-                </div>
-              )}
+                <dl>
+                  {about.facts.map((f) => (
+                    <div key={f.k} className="flex items-baseline gap-4 border-b border-line px-6 py-3.5 last:border-0">
+                      <dt className="w-9 shrink-0 text-[13px] font-bold text-accent">{f.k}</dt>
+                      <dd className="text-[14px] font-semibold text-ink" style={{ color: "#ececec" }}>{f.v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Tilt>
             </Reveal>
             <Reveal className="grid gap-px border border-line bg-line" stagger>
               {about.principles.map((pr) => (
