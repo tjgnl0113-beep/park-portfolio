@@ -135,39 +135,37 @@
   letter-spacing: -0.035em;
   white-space: nowrap;
 }
-/* 타이핑 헤드라인 — ghost가 자리를 예약, typedLayer가 그 위에 타자 */
+/* 빅뱅 헤드라인 — 글자가 중앙점에서 폭발해 자리로 꽂힌다 (transform-only, 시프트 없음) */
 .headline { position: relative; }
 .hline { display: block; }
-.ghost { visibility: hidden; }
-.ghost .hline { display: block; }
-.typedLayer {
-  position: absolute;
-  inset: 0;
-  display: block;
+.bchar {
+  display: inline-block;
+  white-space: pre;
+  opacity: 0;
+  will-change: transform, opacity;
 }
 .hem {
   font-style: normal;
   color: #e63a0f;
-  display: inline-block;
 }
-.punch {
-  animation: punch 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+.bangGo .bchar {
+  animation: bang 0.72s cubic-bezier(0.22, 1.35, 0.36, 1) both;
 }
-@keyframes punch {
-  0% { transform: scale(1.32); filter: brightness(1.8) drop-shadow(0 0 18px rgba(230, 58, 15, 0.8)); }
-  100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 0 rgba(230, 58, 15, 0)); }
+/* 강조어(장악·자동화)는 착지 직후 섬광 한 번 더 */
+.bangGo .hem {
+  animation: bang 0.72s cubic-bezier(0.22, 1.35, 0.36, 1) both,
+    emflash 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.72s both;
 }
-.caret {
-  display: inline-block;
-  width: 0.09em;
-  height: 0.82em;
-  margin-left: 0.06em;
-  background: #e63a0f;
-  vertical-align: baseline;
-  transform: translateY(0.08em);
-  animation: blink 0.7s steps(1) infinite;
+.bangDone .bchar { opacity: 1; }
+@keyframes bang {
+  0% { opacity: 0; transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(0.15) rotate(var(--rot, 0deg)); }
+  10% { opacity: 1; }
+  100% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
 }
-@keyframes blink { 50% { opacity: 0; } }
+@keyframes emflash {
+  0% { filter: brightness(2.1) drop-shadow(0 0 22px rgba(230, 58, 15, 0.9)); }
+  100% { filter: brightness(1) drop-shadow(0 0 0 rgba(230, 58, 15, 0)); }
+}
 @keyframes fadeup {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
@@ -262,7 +260,7 @@
 @keyframes mq { to { transform: translateX(-50%); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .fcard, .eyebrow, .role, .ctas, .marquee, .punch, .caret { animation: none !important; transform: none !important; opacity: 1 !important; }
+  .fcard, .eyebrow, .role, .ctas, .marquee, .bchar { animation: none !important; transform: none !important; opacity: 1 !important; }
   .mq { animation: none; }
   .grain { animation: none; }
   .cloud { transition: none; }

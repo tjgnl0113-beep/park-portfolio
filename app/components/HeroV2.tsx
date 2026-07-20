@@ -57,88 +57,48 @@ function buildMeta(text: string, emphasis: string[]): CharMeta[] {
   return meta;
 }
 
-function TypeHeadline({ text, emphasis }: { text: string; emphasis: string[] }) {
+/* 빅뱅 헤드라인 — 글자들이 카드와 같은 중앙점에서 같은 순간 폭발해 자리로 꽂힌다.
+   transform만 쓰므로 레이아웃은 처음부터 최종 상태(시프트 없음). */
+function BigBangHeadline({ text, emphasis, go }: { text: string; emphasis: string[]; go: boolean }) {
   const meta = useMemo(() => buildMeta(text, emphasis), [text, emphasis]);
-  const [n, setN] = useState(0);
-  const done = n >= meta.length;
+  const rootRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
+    if (!go) return;
+    const root = rootRef.current;
+    if (!root) return;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setN(meta.length);
+      root.classList.add(s.bangDone);
       return;
     }
-    let i = 0;
-    let t: ReturnType<typeof setTimeout>;
-    const tick = () => {
-      i++;
-      setN(i);
-      if (i < meta.length) {
-        const nx = meta[i];
-        const prev = meta[i - 1];
-        // 강조어 직전엔 잠깐 멈칫 — 기대감
-        const delay = nx.em >= 0 && prev.em !== nx.em ? 300 : 34;
-        t = setTimeout(tick, delay);
-      }
-    };
-    t = setTimeout(tick, 500);
-    return () => clearTimeout(t);
-  }, [meta]);
-
-  const lines = text.split("\n");
-  const renderLine = (li: number, upTo: number, ghost: boolean) => {
-    const out: React.ReactNode[] = [];
-    let buf = "";
-    let bufEm = -2;
-    let emDone = false;
-    const flush = (key: number) => {
-      if (!buf) return;
-      if (bufEm >= 0) {
-        out.push(
-          <em key={key} className={`${s.hem} ${!ghost && emDone ? s.punch : ""}`}>
-            {buf}
-          </em>
-        );
-      } else {
-        out.push(<span key={key}>{buf}</span>);
-      }
-      buf = "";
-    };
-    meta.forEach((m: CharMeta, idx: number) => {
-      if (m.line !== li) return;
-      if (!ghost && idx >= upTo) return;
-      if (m.em !== bufEm) {
-        flush(idx);
-        bufEm = m.em;
-      }
-      buf += m.ch;
-      emDone = m.em >= 0 && upTo > m.emEndIdx;
+    // 각 글자의 최종 위치 → 히어로 중앙까지의 벡터를 CSS 변수로
+    const hero = root.closest("section") ?? root;
+    const hr = hero.getBoundingClientRect();
+    const cx = hr.left + hr.width / 2;
+    const cy = hr.top + hr.height / 2;
+    root.querySelectorAll<HTMLElement>("[data-bang]").forEach((sp, i) => {
+      const r = sp.getBoundingClientRect();
+      sp.style.setProperty("--dx", `${cx - (r.left + r.width / 2)}px`);
+      sp.style.setProperty("--dy", `${cy - (r.top + r.height / 2)}px`);
+      sp.style.setProperty("--rot", `${(Math.random() - 0.5) * 160}deg`);
+      sp.style.animationDelay = `${i * 12 + Math.random() * 50}ms`;
     });
-    flush(9999);
-    return out;
-  };
-
-  // 현재 타이핑 중인 라인 (캐럿 위치)
-  const caretLine = done ? -1 : n > 0 ? meta[Math.min(n, meta.length - 1)].line : 0;
+    requestAnimationFrame(() => root.classList.add(s.bangGo));
+  }, [go]);
 
   return (
-    <h1 className={s.headline} aria-label={text.replace("\n", " ")}>
-      {/* 자리 예약 레이어 (투명) — 페이지가 처음부터 최종 크기를 안다 */}
-      <span className={s.ghost} aria-hidden>
-        {lines.map((_, li) => (
-          <span key={li} className={s.hline}>
-            {renderLine(li, meta.length, true)}
-          </span>
-        ))}
-      </span>
-      {/* 타이핑 레이어 */}
-      <span className={s.typedLayer} aria-hidden>
-        {lines.map((_, li) => (
-          <span key={li} className={s.hline}>
-            {renderLine(li, n, false)}
-            {caretLine === li && <span className={s.caret} />}
-          </span>
-        ))}
-      </span>
+    <h1 ref={rootRef} className={s.headline} aria-label={text.replace("\n", " ")}>
+      {text.split("\n").map((_, li) => (
+        <span key={li} className={s.hline} aria-hidden>
+          {meta
+            .filter((m: CharMeta) => m.line === li)
+            .map((m: CharMeta, i: number) => (
+              <span key={i} data-bang className={`${s.bchar} ${m.em >= 0 ? s.hem : ""}`}>
+                {m.ch === " " ? " " : m.ch}
+              </span>
+            ))}
+        </span>
+      ))}
     </h1>
   );
 }
@@ -149,6 +109,17 @@ export default function HeroV2() {
   const [needGyroPerm, setNeedGyroPerm] = useState(false);
   const [use3d, setUse3d] = useState(false);
   const [ready3d, setReady3d] = useState(false);
+  const [bang, setBang] = useState(false);
+
+  // 빅뱅 트리거: 3D 버스트와 같은 순간. 3D 미사용/지연 시 폴백 타이머
+  useEffect(() => {
+    if (ready3d) {
+      setBang(true);
+      return;
+    }
+    const t = setTimeout(() => setBang(true), use3d ? 2600 : 500);
+    return () => clearTimeout(t);
+  }, [use3d, ready3d]);
 
   // 3D 씬 게이트: 데스크톱(마우스) + 모션 허용 + WebGL + 4코어 이상
   useEffect(() => {
@@ -268,7 +239,7 @@ export default function HeroV2() {
 
       <div className={s.center}>
         <p className={s.eyebrow}>Contents · Performance Marketer</p>
-        <TypeHeadline text={profile.headline} emphasis={["장악", "자동화"]} />
+        <BigBangHeadline text={profile.headline} emphasis={["장악", "자동화"]} go={bang} />
         <p className={s.role}>
           <b>{profile.name}</b> — 고관여 시장 3년 6개월, 성과를 시스템으로
           만드는 마케터
