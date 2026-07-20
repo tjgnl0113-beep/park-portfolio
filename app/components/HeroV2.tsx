@@ -59,16 +59,47 @@ function buildMeta(text: string, emphasis: string[]): CharMeta[] {
 
 /* 빅뱅 헤드라인 — 글자들이 카드와 같은 중앙점에서 같은 순간 폭발해 자리로 꽂힌다.
    transform만 쓰므로 레이아웃은 처음부터 최종 상태(시프트 없음). */
-function BigBangHeadline({ text, emphasis, go }: { text: string; emphasis: string[]; go: boolean }) {
+function BigBangHeadline({ text, emphasis }: { text: string; emphasis: string[] }) {
   const meta = useMemo(() => buildMeta(text, emphasis), [text, emphasis]);
-  const rootRef = useRef<HTMLHeadingElement>(null);
+  return (
+    <h1 className={s.headline} aria-label={text.replace("\n", " ")}>
+      {text.split("\n").map((_, li) => (
+        <span key={li} className={s.hline} aria-hidden>
+          {meta
+            .filter((m: CharMeta) => m.line === li)
+            .map((m: CharMeta, i: number) => (
+              <span key={i} data-bang className={`${s.bchar} ${m.em >= 0 ? s.hem : ""}`}>
+                {m.ch === " " ? " " : m.ch}
+              </span>
+            ))}
+        </span>
+      ))}
+    </h1>
+  );
+}
 
+/* 한 줄 텍스트의 글자 단위 빅뱅 마크업 (아이브로 등) */
+function BangChars({ text }: { text: string }) {
+  return (
+    <>
+      {text.split("").map((ch, i) => (
+        <span key={i} data-bang className={s.bchar}>
+          {ch}
+        </span>
+      ))}
+    </>
+  );
+}
+
+/* center 전체를 측정해 [data-bang] 글자들에 폭발 벡터를 심고 발화시키는 훅 */
+function useBang(centerRef: React.RefObject<HTMLDivElement>, go: boolean) {
   useEffect(() => {
     if (!go) return;
-    const root = rootRef.current;
+    const root = centerRef.current;
     if (!root) return;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      root.classList.add(s.bangDone);
+      root.classList.add(s.bangDone, s.go);
+      root.closest("section")?.classList.add(s.go);
       return;
     }
     // 각 글자의 최종 위치 → 히어로 중앙까지의 벡터를 CSS 변수로
@@ -83,29 +114,18 @@ function BigBangHeadline({ text, emphasis, go }: { text: string; emphasis: strin
       sp.style.setProperty("--rot", `${(Math.random() - 0.5) * 160}deg`);
       sp.style.animationDelay = `${i * 12 + Math.random() * 50}ms`;
     });
-    requestAnimationFrame(() => root.classList.add(s.bangGo));
+    requestAnimationFrame(() => {
+      root.classList.add(s.bangGo, s.go);
+      root.closest("section")?.classList.add(s.go);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [go]);
-
-  return (
-    <h1 ref={rootRef} className={s.headline} aria-label={text.replace("\n", " ")}>
-      {text.split("\n").map((_, li) => (
-        <span key={li} className={s.hline} aria-hidden>
-          {meta
-            .filter((m: CharMeta) => m.line === li)
-            .map((m: CharMeta, i: number) => (
-              <span key={i} data-bang className={`${s.bchar} ${m.em >= 0 ? s.hem : ""}`}>
-                {m.ch === " " ? " " : m.ch}
-              </span>
-            ))}
-        </span>
-      ))}
-    </h1>
-  );
 }
 
 export default function HeroV2() {
   const heroRef = useRef<HTMLElement>(null);
   const cloudRef = useRef<HTMLDivElement>(null);
+  const centerRef = useRef<HTMLDivElement>(null);
   const [needGyroPerm, setNeedGyroPerm] = useState(false);
   const [use3d, setUse3d] = useState(false);
   const [ready3d, setReady3d] = useState(false);
@@ -120,6 +140,9 @@ export default function HeroV2() {
     const t = setTimeout(() => setBang(true), use3d ? 2600 : 500);
     return () => clearTimeout(t);
   }, [use3d, ready3d]);
+
+  // 아이브로+헤드라인 글자 전체를 한 번에 측정·발화 (같은 폭발 사건)
+  useBang(centerRef, bang);
 
   // 3D 씬 게이트: 데스크톱(마우스) + 모션 허용 + WebGL + 4코어 이상
   useEffect(() => {
@@ -237,9 +260,11 @@ export default function HeroV2() {
         ))}
       </div>
 
-      <div className={s.center}>
-        <p className={s.eyebrow}>Contents · Performance Marketer</p>
-        <BigBangHeadline text={profile.headline} emphasis={["장악", "자동화"]} go={bang} />
+      <div ref={centerRef} className={s.center}>
+        <p className={s.eyebrow} aria-label="Contents · Performance Marketer">
+          <BangChars text="CONTENTS · PERFORMANCE MARKETER" />
+        </p>
+        <BigBangHeadline text={profile.headline} emphasis={["장악", "자동화"]} />
         <p className={s.role}>
           <b>{profile.name}</b> — 고관여 시장 3년 6개월, 성과를 시스템으로
           만드는 마케터
