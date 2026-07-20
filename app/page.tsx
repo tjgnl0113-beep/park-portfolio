@@ -4,6 +4,7 @@ import HeroV2 from "./components/HeroV2";
 import Reveal from "./components/Reveal";
 import Tilt from "./components/Tilt";
 import MethodSticky from "./components/MethodSticky";
+import StageShowcase, { type StageProject } from "./components/StageShowcase";
 import CountUp from "./components/CountUp";
 import Magnet from "./components/Magnet";
 import { profile, metrics, evidence, projects, projectGroups, career, skills, about, type Project } from "./data";
@@ -280,7 +281,26 @@ function Projects() {
           </p>
         </Reveal>
 
-        {projectGroups.map((g) => {
+        <StageShowcase
+          projects={projectGroups.flatMap((g) =>
+            projects
+              .filter((p) => p.group === g.key)
+              .map(
+                (p): StageProject => ({
+                  title: p.title,
+                  tag: p.tag,
+                  oneLiner: p.oneLiner,
+                  proves: p.proves,
+                  stack: p.stack,
+                  cover: p.cover ?? p.images?.[0]?.src,
+                  slug: p.slug,
+                  live: p.live,
+                  groupTitle: g.title,
+                })
+              )
+          )}
+        >
+          {projectGroups.map((g) => {
           const items = projects.filter((p) => p.group === g.key);
           if (!items.length) return null;
           return (
@@ -303,6 +323,7 @@ function Projects() {
             </div>
           );
         })}
+        </StageShowcase>
       </div>
     </section>
   );
