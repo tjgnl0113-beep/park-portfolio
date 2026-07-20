@@ -8,6 +8,7 @@ import StageShowcase, { type StageProject } from "./components/StageShowcase";
 import CountUp from "./components/CountUp";
 import Magnet from "./components/Magnet";
 import { profile, metrics, evidence, projects, projectGroups, career, skills, about, type Project } from "./data";
+import { IMG_SIZES } from "./imageSizes";
 
 export default function Home() {
   return (
@@ -79,7 +80,13 @@ function MarketingResults() {
                 {e.src ? (
                   <div className="overflow-hidden border border-line bg-black/30">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={e.src} alt={e.title} className="w-full" />
+                    <img
+                      src={e.src}
+                      alt={e.title}
+                      width={IMG_SIZES[e.src]?.w}
+                      height={IMG_SIZES[e.src]?.h}
+                      className="h-auto w-full"
+                    />
                   </div>
                 ) : (
                   <div className="flex min-h-[200px] items-center justify-center border border-dashed border-line text-center text-sm text-faint">

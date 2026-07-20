@@ -6,6 +6,7 @@ import Reveal from "../../components/Reveal";
 import CountUp from "../../components/CountUp";
 import CaseNav, { type CaseStep } from "../../components/CaseNav";
 import { projects, profile } from "../../data";
+import { IMG_SIZES } from "../../imageSizes";
 
 const caseProjects = projects.filter((p) => p.slug && p.caseStudy);
 
@@ -39,7 +40,13 @@ function Band({ src, caption }: { src: string; caption?: string }) {
         )}
         <div className="border-y border-line bg-black/30">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={src} alt={caption ?? ""} className="mx-auto max-h-[82vh] w-auto max-w-full" />
+          <img
+            src={src}
+            alt={caption ?? ""}
+            width={IMG_SIZES[src]?.w}
+            height={IMG_SIZES[src]?.h}
+            className="mx-auto h-auto max-h-[82vh] w-auto max-w-full"
+          />
         </div>
       </figure>
     </Reveal>

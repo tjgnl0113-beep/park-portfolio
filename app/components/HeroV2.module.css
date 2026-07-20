@@ -59,7 +59,10 @@
   background: #111;
   border: 1px solid #242424;
   transform-style: preserve-3d;
-  animation: enter 1.15s cubic-bezier(0.16, 1, 0.3, 1) both,
+  opacity: 0; /* 빅뱅(.go) 전엔 암전 — 등장도 같은 사건에 묶는다 */
+}
+.go .fcard {
+  animation: enter 0.6s cubic-bezier(0.22, 1.35, 0.36, 1) both,
     drift 9s ease-in-out 1.2s infinite alternate;
 }
 .fcard b {
@@ -89,21 +92,22 @@
   margin-top: 0;
   font-size: 13px;
 }
+/* transform은 3D 배치가 쓰므로 독립 scale 속성으로 (덮어쓰기 방지) */
 @keyframes enter {
-  from { opacity: 0; margin-top: 60px; filter: blur(6px); }
-  to { opacity: 1; margin-top: 0; filter: blur(0); }
+  from { opacity: 0; scale: 0.4; filter: blur(5px); }
+  to { opacity: 1; scale: 1; filter: blur(0); }
 }
 @keyframes drift {
   from { margin-top: -9px; }
   to { margin-top: 9px; }
 }
-.p1 { top: 12%; left: 5%; transform: translateZ(-220px) rotateY(9deg); animation-delay: 0.55s, 1.2s; }
-.p2 { top: 66%; left: 9%; transform: translateZ(-80px) rotateY(6deg); animation-delay: 0.7s, -3s; }
-.p3 { top: 10%; left: 74%; transform: translateZ(-140px) rotateY(-8deg); animation-delay: 0.62s, -5s; }
-.p4 { top: 62%; left: 78%; transform: translateZ(-40px) rotateY(-6deg); animation-delay: 0.78s, -7s; }
-.p5 { top: 3%; left: 27%; transform: translateZ(-320px); animation-delay: 0.9s, -2s; }
-.p6 { top: 74%; left: 58%; transform: translateZ(-300px); animation-delay: 0.96s, -6s; }
-.p7 { top: 82%; left: 34%; transform: translateZ(-160px); animation-delay: 0.84s, -4s; }
+.p1 { top: 12%; left: 5%; transform: translateZ(-220px) rotateY(9deg); animation-delay: 0.02s, 1.2s; }
+.p2 { top: 66%; left: 9%; transform: translateZ(-80px) rotateY(6deg); animation-delay: 0.1s, -3s; }
+.p3 { top: 10%; left: 74%; transform: translateZ(-140px) rotateY(-8deg); animation-delay: 0.05s, -5s; }
+.p4 { top: 62%; left: 78%; transform: translateZ(-40px) rotateY(-6deg); animation-delay: 0.13s, -7s; }
+.p5 { top: 3%; left: 27%; transform: translateZ(-320px); animation-delay: 0.16s, -2s; }
+.p6 { top: 74%; left: 58%; transform: translateZ(-300px); animation-delay: 0.2s, -6s; }
+.p7 { top: 82%; left: 34%; transform: translateZ(-160px); animation-delay: 0.09s, -4s; }
 
 /* 중앙 타이포 */
 .center {
