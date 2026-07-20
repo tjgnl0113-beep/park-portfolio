@@ -65,12 +65,30 @@ function FloatCard({ spec, seed }: { spec: CardSpec; seed: number }) {
     b.applyTorqueImpulse({ x: (Math.random() - 0.5) * 0.35, y: (Math.random() - 0.5) * 0.35, z: (Math.random() - 0.5) * 0.25 }, true);
   };
 
-  // 스폰은 무대 살짝 밖 — 물리 스프링이 홈으로 끌어와 "날아와 정렬" (거리 짧게 = 빠른 정착)
+  // 버스트 어셈블: 중앙에서 같은 깊이로 방사형 사출 — 카메라 쪽으로 날아와 커지는 것 방지
   const spawn: [number, number, number] = [
-    spec.home[0] * 1.25,
-    spec.home[1] * 1.2 - 3.5,
-    spec.home[2] - 7,
+    spec.home[0] * 0.08,
+    spec.home[1] * 0.08 - 0.2,
+    spec.home[2],
   ];
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const b = body.current;
+      if (!b) return;
+      const dx = spec.home[0] - spawn[0];
+      const dy = spec.home[1] - spawn[1];
+      const dz = spec.home[2] - spawn[2];
+      const K = 0.88; // 사출 강도 — 감쇠(2.4)와 맞물려 살짝 오버슈트 후 정착
+      b.applyImpulse({ x: dx * K, y: dy * K, z: dz * K }, true);
+      b.applyTorqueImpulse(
+        { x: (Math.random() - 0.5) * 0.12, y: (Math.random() - 0.5) * 0.12, z: (Math.random() - 0.5) * 0.1 },
+        true
+      );
+    }, 30 + seed * 35); // 촥촥촥 — 카드별 미세 시차
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <RigidBody
@@ -239,6 +257,18 @@ function Playground({ y }: { y: number }) {
   );
 }
 
+// 버스트 순간의 버밀리언 섬광 — 중앙에서 터지고 0.6초 만에 잦아든다
+function BurstFlash() {
+  const light = useRef<THREE.PointLight>(null);
+  const t0 = useRef(-1);
+  useFrame(({ clock }) => {
+    if (t0.current < 0) t0.current = clock.elapsedTime;
+    const dt = clock.elapsedTime - t0.current;
+    if (light.current) light.current.intensity = 130 * Math.exp(-dt * 5.5);
+  });
+  return <pointLight ref={light} position={[0, 0, 1]} intensity={0} color={ACCENT} />;
+}
+
 function Scene() {
   const cards = useMemo(buildCards, []);
   // state여야 측정 후 씬이 재배치된다 (ref는 재렌더를 안 일으킴)
@@ -286,6 +316,7 @@ function Scene() {
       <Landmarks depth={layout.depth} />
       {/* 물리(wasm)는 자체 대기 — 불씨·구조물·조명은 즉시 뜬다 */}
       <Suspense fallback={null}>
+        <BurstFlash />
         <Physics gravity={[0, -6, 0]}>
           {/* 카드는 gravityScale 0이라 중력 무시, 장난감만 떨어진다 */}
           {cards.map((c, i) => (
