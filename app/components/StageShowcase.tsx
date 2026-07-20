@@ -112,6 +112,11 @@ function StageScene({ projects, progress }: { projects: StageProject[]; progress
   );
 }
 
+function StageReady({ onReady }: { onReady: () => void }) {
+  useEffect(() => onReady(), [onReady]);
+  return null;
+}
+
 /* ── 본체: 스티키 스크롤 + HTML 정보 패널 ─────────────── */
 
 export default function StageShowcase({
@@ -122,6 +127,7 @@ export default function StageShowcase({
   children: React.ReactNode; // 폴백(기존 그리드)
 }) {
   const [ok, setOk] = useState<boolean | null>(null);
+  const [ready, setReady] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const progress = useRef(0);
   const [idx, setIdx] = useState(0);
@@ -164,10 +170,14 @@ export default function StageShowcase({
   return (
     <div ref={wrapRef} style={{ height: `${projects.length * 68 + 34}svh` }}>
       <div className="sticky top-16 grid h-[calc(100svh-64px)] grid-cols-[1.15fr_1fr] items-center gap-4 overflow-hidden">
-        {/* 3D 무대 */}
-        <div className="relative h-full">
+        {/* 3D 무대 — 준비 완료 후 페이드인 */}
+        <div
+          className="relative h-full"
+          style={{ opacity: ready ? 1 : 0, transition: "opacity 1s cubic-bezier(0.16,1,0.3,1)" }}
+        >
           <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 7.4], fov: 40 }} gl={{ antialias: true, alpha: true }}>
             <Suspense fallback={null}>
+              <StageReady onReady={() => setReady(true)} />
               <StageScene projects={projects} progress={progress} />
             </Suspense>
           </Canvas>

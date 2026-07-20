@@ -37,6 +37,7 @@ export default function HeroV2() {
   const cloudRef = useRef<HTMLDivElement>(null);
   const [needGyroPerm, setNeedGyroPerm] = useState(false);
   const [use3d, setUse3d] = useState(false);
+  const [ready3d, setReady3d] = useState(false);
 
   // 3D 씬 게이트: 데스크톱(마우스) + 모션 허용 + WebGL + 4코어 이상
   useEffect(() => {
@@ -127,8 +128,18 @@ export default function HeroV2() {
 
   return (
     <section id="top" ref={heroRef} className={s.hero}>
-      {use3d && <Hero3D />}
-      <div ref={cloudRef} className={s.cloud} aria-hidden style={use3d ? { display: "none" } : undefined}>
+      {use3d && <Hero3D onReady={() => setReady3d(true)} />}
+      {/* CSS 클라우드 → 3D 씬 크로스페이드: 3D가 준비된 순간부터 서서히 물러난다 */}
+      <div
+        ref={cloudRef}
+        className={s.cloud}
+        aria-hidden
+        style={{
+          opacity: ready3d ? 0 : 1,
+          transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1)",
+          pointerEvents: "none",
+        }}
+      >
         {CLOUD_METRICS.map((m, i) => {
           const parsed = parseValue(m.value);
           return (

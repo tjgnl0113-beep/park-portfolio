@@ -65,10 +65,17 @@ function FloatCard({ spec, seed }: { spec: CardSpec; seed: number }) {
     b.applyTorqueImpulse({ x: (Math.random() - 0.5) * 0.35, y: (Math.random() - 0.5) * 0.35, z: (Math.random() - 0.5) * 0.25 }, true);
   };
 
+  // 스폰은 무대 밖 깊은 곳 — 물리 스프링이 홈으로 끌어와 "날아와 정렬"하는 입장 연출
+  const spawn: [number, number, number] = [
+    spec.home[0] * 1.5,
+    spec.home[1] * 1.4 - 6.5,
+    spec.home[2] - 15,
+  ];
+
   return (
     <RigidBody
       ref={body}
-      position={spec.home}
+      position={spawn}
       rotation={[0, 0, spec.rot]}
       linearDamping={2.4}
       angularDamping={2.6}
@@ -286,12 +293,20 @@ function Scene() {
   );
 }
 
-export default function Hero3D() {
+// Suspense가 풀리는 순간(폰트·텍스처 준비 완료)을 부모에 알린다
+function Ready({ onReady }: { onReady: () => void }) {
+  useEffect(() => onReady(), [onReady]);
+  return null;
+}
+
+export default function Hero3D({ onReady }: { onReady?: () => void }) {
   const [evtSrc, setEvtSrc] = useState<HTMLElement | null>(null);
+  const [ready, setReady] = useState(false);
   useEffect(() => setEvtSrc(document.body), []);
   if (!evtSrc) return null;
 
   // body로 포탈 — .hero의 perspective가 fixed의 기준이 되어 클리핑되는 것을 회피
+  // 씬은 준비 완료 후 페이드인 — 갑작스러운 팝인 방지
   return createPortal(
     <Canvas
       dpr={[1, 1.5]}
@@ -299,9 +314,22 @@ export default function Hero3D() {
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       eventSource={evtSrc}
       eventPrefix="client"
-      style={{ position: "fixed", inset: 0, zIndex: -1, pointerEvents: "none" }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: -1,
+        pointerEvents: "none",
+        opacity: ready ? 1 : 0,
+        transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
     >
       <Suspense fallback={null}>
+        <Ready
+          onReady={() => {
+            setReady(true);
+            onReady?.();
+          }}
+        />
         <Scene />
       </Suspense>
     </Canvas>,
