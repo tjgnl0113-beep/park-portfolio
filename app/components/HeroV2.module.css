@@ -6,7 +6,7 @@
   height: calc(100svh - 64px); /* sticky 네비 높이 제외 — 마키까지 첫 화면에 */
   min-height: 620px;
   overflow: hidden;
-  background: #070707;
+  background: transparent; /* 3D 캔버스(fixed z:-1)가 비치도록. 바탕색은 html */
   color: #fff;
   perspective: 1100px;
 }

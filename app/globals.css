@@ -13,8 +13,12 @@ section[id] {
   scroll-margin-top: 84px;
 }
 
-body {
+/* 3D 배경 캔버스(z:-1)가 body 뒤에서 비치도록 — 바탕색은 html이 담당 */
+html {
   background: theme(colors.ink);
+}
+body {
+  background: transparent;
   color: #ececec;
   -webkit-font-smoothing: antialiased;
   word-break: keep-all;

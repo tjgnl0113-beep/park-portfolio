@@ -489,6 +489,9 @@ function Contact() {
             </Magnet>
           </div>
         </Reveal>
+        <p className="mt-10 hidden text-xs text-faint md:block">
+          ⚡ 여기까지 내려오셨다면 — 화면에 떨어져 있는 조각들을 마우스로 밀어보세요. 이 페이지의 물리 엔진은 장식이 아닙니다.
+        </p>
         <footer className="mt-20 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-8 text-sm text-faint">
           <span>© {new Date().getFullYear()} {profile.name}. {profile.location}.</span>
           <span>
