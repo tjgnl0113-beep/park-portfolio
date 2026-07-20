@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
+import { preload } from "react-dom";
 import FxLayer from "./components/FxLayer";
 import "./globals.css";
+
+// 3D 씬 텍스트용 폰트 — 페이지 로드 즉시 내려받아 씬 등장 지연 최소화
+const FONT_3D =
+  "https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff/Pretendard-Bold.woff";
 
 export const metadata: Metadata = {
   // 커스텀 도메인 연결 시 여기만 바꾸면 됨 (OG 이미지 절대경로 기준)
@@ -28,6 +33,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  preload(FONT_3D, { as: "font", type: "font/woff", crossOrigin: "anonymous" });
   return (
     <html lang="ko">
       <body>

@@ -13,10 +13,10 @@ import { Physics, RigidBody, BallCollider, CuboidCollider, type RapierRigidBody 
 import * as THREE from "three";
 import { metrics } from "../data";
 
+// 폰트는 1종만 (Bold) — 로딩 반토막. layout.tsx에서 preload됨
 const FONT_BOLD =
   "https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff/Pretendard-Bold.woff";
-const FONT_MED =
-  "https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff/Pretendard-Medium.woff";
+const FONT_MED = FONT_BOLD;
 const ACCENT = "#E63A0F";
 const SCALE = 0.0058; // scrollY(px) → 카메라 하강량
 
@@ -65,11 +65,11 @@ function FloatCard({ spec, seed }: { spec: CardSpec; seed: number }) {
     b.applyTorqueImpulse({ x: (Math.random() - 0.5) * 0.35, y: (Math.random() - 0.5) * 0.35, z: (Math.random() - 0.5) * 0.25 }, true);
   };
 
-  // 스폰은 무대 밖 깊은 곳 — 물리 스프링이 홈으로 끌어와 "날아와 정렬"하는 입장 연출
+  // 스폰은 무대 살짝 밖 — 물리 스프링이 홈으로 끌어와 "날아와 정렬" (거리 짧게 = 빠른 정착)
   const spawn: [number, number, number] = [
-    spec.home[0] * 1.5,
-    spec.home[1] * 1.4 - 6.5,
-    spec.home[2] - 15,
+    spec.home[0] * 1.25,
+    spec.home[1] * 1.2 - 3.5,
+    spec.home[2] - 7,
   ];
 
   return (
@@ -89,20 +89,23 @@ function FloatCard({ spec, seed }: { spec: CardSpec; seed: number }) {
         <RoundedBox args={[spec.w + 0.02, spec.h + 0.02, 0.1]} radius={0.03} smoothness={3}>
           <meshBasicMaterial color="#242428" wireframe transparent opacity={0.35} />
         </RoundedBox>
-        {spec.value ? (
-          <>
-            <Text font={FONT_BOLD} fontSize={0.52} color="#ffffff" anchorX="left" anchorY="middle" position={[-spec.w / 2 + 0.22, 0.18, 0.09]}>
-              {spec.value}
-            </Text>
-            <Text font={FONT_MED} fontSize={0.17} color="#9e9e9e" anchorX="left" anchorY="middle" position={[-spec.w / 2 + 0.23, -0.35, 0.09]}>
+        {/* 텍스트는 개별 대기 — 폰트가 늦어도 카드 상자는 먼저 등장 */}
+        <Suspense fallback={null}>
+          {spec.value ? (
+            <>
+              <Text font={FONT_BOLD} fontSize={0.52} color="#ffffff" anchorX="left" anchorY="middle" position={[-spec.w / 2 + 0.22, 0.18, 0.09]}>
+                {spec.value}
+              </Text>
+              <Text font={FONT_MED} fontSize={0.17} color="#9e9e9e" anchorX="left" anchorY="middle" position={[-spec.w / 2 + 0.23, -0.35, 0.09]}>
+                {spec.label}
+              </Text>
+            </>
+          ) : (
+            <Text font={FONT_MED} fontSize={0.2} color="#b9b6be" anchorX="center" anchorY="middle" position={[0, 0, 0.09]}>
               {spec.label}
             </Text>
-          </>
-        ) : (
-          <Text font={FONT_MED} fontSize={0.2} color="#b9b6be" anchorX="center" anchorY="middle" position={[0, 0, 0.09]}>
-            {spec.label}
-          </Text>
-        )}
+          )}
+        </Suspense>
       </group>
     </RigidBody>
   );
@@ -281,14 +284,17 @@ function Scene() {
       <pointLight position={[7, 3, -2]} intensity={14} color="#ff8a5c" />
       <Embers depth={layout.depth} />
       <Landmarks depth={layout.depth} />
-      <Physics gravity={[0, -6, 0]}>
-        {/* 카드는 gravityScale 0이라 중력 무시, 장난감만 떨어진다 */}
-        {cards.map((c, i) => (
-          <FloatCard key={i} spec={c} seed={i} />
-        ))}
-        <Playground key={layout.playY} y={layout.playY} />
-        <PointerBall />
-      </Physics>
+      {/* 물리(wasm)는 자체 대기 — 불씨·구조물·조명은 즉시 뜬다 */}
+      <Suspense fallback={null}>
+        <Physics gravity={[0, -6, 0]}>
+          {/* 카드는 gravityScale 0이라 중력 무시, 장난감만 떨어진다 */}
+          {cards.map((c, i) => (
+            <FloatCard key={i} spec={c} seed={i} />
+          ))}
+          <Playground key={layout.playY} y={layout.playY} />
+          <PointerBall />
+        </Physics>
+      </Suspense>
     </>
   );
 }
@@ -320,7 +326,7 @@ export default function Hero3D({ onReady }: { onReady?: () => void }) {
         zIndex: -1,
         pointerEvents: "none",
         opacity: ready ? 1 : 0,
-        transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        transition: "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
     >
       <Suspense fallback={null}>
