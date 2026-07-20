@@ -3,8 +3,12 @@
 // HeroV2 — 다크 프리미엄(Vivid Motion) × 3D 카드 클라우드(Michael Gatt) × 연출 레이어.
 // 지표·태그는 data.ts 실측값을 그대로 사용한다.
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { profile, metrics } from "../data";
 import s from "./HeroV2.module.css";
+
+// 3D 씬은 데스크톱 전용 코드 스플릿 — 모바일/저사양은 로드조차 안 함
+const Hero3D = dynamic(() => import("./Hero3D"), { ssr: false });
 
 // iOS는 자이로 접근에 사용자 제스처 승인이 필요
 type DOEventCtor = typeof DeviceOrientationEvent & {
@@ -32,6 +36,19 @@ export default function HeroV2() {
   const heroRef = useRef<HTMLElement>(null);
   const cloudRef = useRef<HTMLDivElement>(null);
   const [needGyroPerm, setNeedGyroPerm] = useState(false);
+  const [use3d, setUse3d] = useState(false);
+
+  // 3D 씬 게이트: 데스크톱(마우스) + 모션 허용 + WebGL + 4코어 이상
+  useEffect(() => {
+    try {
+      if (!matchMedia("(pointer: fine)").matches) return;
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if ((navigator.hardwareConcurrency ?? 8) < 4) return;
+      const c = document.createElement("canvas");
+      if (!c.getContext("webgl2") && !c.getContext("webgl")) return;
+      setUse3d(true);
+    } catch {}
+  }, []);
 
   // 자이로 패럴랙스 — 폰을 기울이면 카드 클라우드가 기운다 (마우스 패럴랙스의 모바일 등가물)
   const attachGyro = () => {
@@ -110,7 +127,8 @@ export default function HeroV2() {
 
   return (
     <section id="top" ref={heroRef} className={s.hero}>
-      <div ref={cloudRef} className={s.cloud} aria-hidden>
+      {use3d && <Hero3D />}
+      <div ref={cloudRef} className={s.cloud} aria-hidden style={use3d ? { display: "none" } : undefined}>
         {CLOUD_METRICS.map((m, i) => {
           const parsed = parseValue(m.value);
           return (

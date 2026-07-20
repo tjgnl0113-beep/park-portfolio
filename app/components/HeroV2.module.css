@@ -109,6 +109,7 @@
 .center {
   position: relative;
   z-index: 2;
+  pointer-events: none; /* 3D 씬이 커서를 받도록 — 버튼만 예외 */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -164,6 +165,7 @@
 }
 .role b { color: #fff; font-weight: 600; }
 .ctas {
+  pointer-events: auto;
   margin-top: 34px;
   display: flex;
   flex-wrap: wrap;
