@@ -3,6 +3,7 @@ import SiteNav from "./components/SiteNav";
 import HeroV2 from "./components/HeroV2";
 import Reveal from "./components/Reveal";
 import Tilt from "./components/Tilt";
+import MethodSticky from "./components/MethodSticky";
 import CountUp from "./components/CountUp";
 import Magnet from "./components/Magnet";
 import { profile, metrics, evidence, projects, projectGroups, career, skills, about, type Project } from "./data";
@@ -36,10 +37,11 @@ function Metrics() {
             법률·전문직 고관여 시장에서 만든 실제 전환 성과.
           </p>
         </Reveal>
-        <Reveal className="mt-12 grid grid-cols-2 gap-px border border-line bg-line md:grid-cols-3" stagger>
+        {/* 모바일: 가로 스냅 캐러셀 / 데스크톱: 그리드 */}
+        <Reveal className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-px overflow-x-auto border border-line bg-line md:grid md:grid-cols-3 md:overflow-visible" stagger>
           {metrics.map((m) => (
-            <div key={m.label} className="group bg-surface p-5 transition-colors hover:bg-[#16161a] md:p-7">
-              <div className="whitespace-nowrap text-[1.9rem] font-extrabold tracking-tight sm:text-4xl md:text-[2.6rem]">
+            <div key={m.label} className="group w-[74vw] shrink-0 snap-center bg-surface p-6 transition-colors hover:bg-[#16161a] md:w-auto md:shrink md:p-7">
+              <div className="whitespace-nowrap text-4xl font-extrabold tracking-tight md:text-[2.6rem]">
                 <CountUp value={m.value} />
               </div>
               <div className="mt-3 font-bold">{m.label}</div>
@@ -49,6 +51,7 @@ function Metrics() {
             </div>
           ))}
         </Reveal>
+        <p className="mt-3 text-xs text-faint md:hidden">옆으로 넘겨 보세요 →</p>
       </div>
     </section>
   );
@@ -70,7 +73,7 @@ function MarketingResults() {
         <div className="mt-12 space-y-8">
           {evidence.map((e) => (
             <Reveal key={e.title}>
-              <Tilt max={2.5} className="grid gap-6 border border-line bg-surface p-5 md:grid-cols-[1.3fr_1fr] md:p-6">
+              <Tilt max={2.5} className="spar grid gap-6 border border-line bg-surface p-5 md:grid-cols-[1.3fr_1fr] md:p-6">
                 {/* 증거 이미지 (없으면 플레이스홀더) */}
                 {e.src ? (
                   <div className="overflow-hidden border border-line bg-black/30">
@@ -173,7 +176,8 @@ function Method() {
             위의 숫자들은 우연이 아니라, 이 순서를 지킨 결과입니다.
           </p>
         </Reveal>
-        <Reveal className="mt-12 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4" stagger>
+        {/* 데스크톱: 4열 그리드 */}
+        <Reveal className="mt-12 hidden gap-px border border-line bg-line sm:grid sm:grid-cols-2 lg:grid-cols-4" stagger>
           {METHOD_STEPS.map((st) => (
             <div key={st.n} className="group relative overflow-hidden bg-surface p-6 transition-colors hover:bg-[#16161a] md:p-7">
               <div
@@ -190,6 +194,8 @@ function Method() {
           ))}
         </Reveal>
       </div>
+      {/* 모바일: 스티키 스크롤텔링 */}
+      <MethodSticky steps={METHOD_STEPS} className="sm:hidden" />
     </section>
   );
 }
@@ -288,7 +294,7 @@ function Projects() {
               <div className="mt-7 grid gap-6 md:grid-cols-2">
                 {items.map((p) => (
                   <Reveal key={p.title}>
-                    <Tilt max={4} className="h-full">
+                    <Tilt max={4} className="spar h-full">
                       <ProjectCard p={p} />
                     </Tilt>
                   </Reveal>

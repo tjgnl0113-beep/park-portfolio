@@ -107,9 +107,58 @@ body {
   animation: bandmq 28s linear infinite;
 }
 
+/* ── 모바일 인터랙션 레이어 ───────────────────────────── */
+
+/* 스크롤 드리븐 시차 — 스크롤 위치가 곧 타임라인 (지원 브라우저 한정, 폴백 안전) */
+@supports (animation-timeline: view()) {
+  @media (max-width: 768px) and (prefers-reduced-motion: no-preference) {
+    .spar {
+      animation: spar linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 32%;
+    }
+    @keyframes spar {
+      from { opacity: 0.25; transform: translateY(42px) scale(0.965); filter: blur(3px); }
+      to { opacity: 1; transform: none; filter: blur(0); }
+    }
+    /* 이미지가 살짝 더 깊게 움직이는 2겹 시차 */
+    .spar-deep {
+      animation: spardeep linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+    @keyframes spardeep {
+      from { transform: translateY(26px); }
+      to { transform: translateY(-6px); }
+    }
+  }
+}
+
+/* 가로 스냅 캐러셀 스크롤바 숨김 */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* 터치 기기: 커서가 없으니 글로우가 스스로 유영 */
+@media (pointer: coarse) {
+  .glow-drift { animation: glowdrift 16s ease-in-out infinite alternate; }
+}
+@keyframes glowdrift {
+  0% { transform: translate(-18vw, 4vh) scale(1); }
+  35% { transform: translate(28vw, 28vh) scale(1.12); }
+  70% { transform: translate(-6vw, 58vh) scale(0.94); }
+  100% { transform: translate(30vw, 82vh) scale(1.08); }
+}
+
+/* 탭 스프링 — 터치의 손맛 */
+@media (pointer: coarse) {
+  .card:active, .fcard-tap:active { transform: scale(0.982); transition: transform 0.12s ease-out; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal.stagger > * { opacity: 1; transform: none; filter: none; transition: none; }
   .rise { animation: none; }
   .bandmq { animation: none; }
   .fxgrain { animation: none; }
+  .glow-drift { animation: none; }
+  .spar, .spar-deep { animation: none; }
 }

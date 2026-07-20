@@ -21,6 +21,14 @@ export default function FxLayer() {
     addEventListener("scroll", onScroll, { passive: true });
     if (rm) return () => removeEventListener("scroll", onScroll);
 
+    // 터치 기기: 커서가 없으니 글로우가 스스로 유영 (CSS 애니메이션)
+    if (matchMedia("(pointer: coarse)").matches) {
+      glow.style.left = "0px";
+      glow.style.top = "0px";
+      glow.classList.add("glow-drift");
+      return () => removeEventListener("scroll", onScroll);
+    }
+
     let mx = innerWidth / 2, my = innerHeight * 0.4, gx = mx, gy = my, raf = 0;
     const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
     addEventListener("mousemove", onMove, { passive: true });

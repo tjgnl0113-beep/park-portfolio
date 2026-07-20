@@ -2,9 +2,14 @@
 
 // HeroV2 — 다크 프리미엄(Vivid Motion) × 3D 카드 클라우드(Michael Gatt) × 연출 레이어.
 // 지표·태그는 data.ts 실측값을 그대로 사용한다.
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { profile, metrics } from "../data";
 import s from "./HeroV2.module.css";
+
+// iOS는 자이로 접근에 사용자 제스처 승인이 필요
+type DOEventCtor = typeof DeviceOrientationEvent & {
+  requestPermission?: () => Promise<"granted" | "denied">;
+};
 
 const CLOUD_METRICS = [metrics[0], metrics[1], metrics[2], metrics[4]]; // 60% / 45% / 600건+ / 월 100건+
 const CLOUD_TAGS = ["변제금 진단 리드 퍼널", "발행 스튜디오 · SEO 대시보드", "콘텐츠 운영 자동화 도구"];
@@ -26,6 +31,20 @@ function parseValue(v: string) {
 export default function HeroV2() {
   const heroRef = useRef<HTMLElement>(null);
   const cloudRef = useRef<HTMLDivElement>(null);
+  const [needGyroPerm, setNeedGyroPerm] = useState(false);
+
+  // 자이로 패럴랙스 — 폰을 기울이면 카드 클라우드가 기운다 (마우스 패럴랙스의 모바일 등가물)
+  const attachGyro = () => {
+    const cloud = cloudRef.current;
+    if (!cloud) return;
+    const clamp = (v: number, m: number) => Math.max(-m, Math.min(m, v));
+    const onOrient = (e: DeviceOrientationEvent) => {
+      const g = clamp(e.gamma ?? 0, 28);
+      const b = clamp((e.beta ?? 45) - 45, 28);
+      cloud.style.transform = `rotateY(${g * 0.4}deg) rotateX(${-b * 0.3}deg) translateX(${g * -1.1}px) translateY(${b * -0.7}px)`;
+    };
+    addEventListener("deviceorientation", onOrient, { passive: true });
+  };
 
   useEffect(() => {
     const hero = heroRef.current!;
@@ -54,7 +73,15 @@ export default function HeroV2() {
 
     if (rm) return;
 
-    // 클라우드 패럴랙스 (글로우·그레인은 전역 FxLayer가 담당)
+    // 터치 기기: 자이로 패럴랙스 (iOS는 승인 버튼 경유)
+    if (matchMedia("(pointer: coarse)").matches && typeof DeviceOrientationEvent !== "undefined") {
+      const ctor = DeviceOrientationEvent as DOEventCtor;
+      if (typeof ctor.requestPermission === "function") setNeedGyroPerm(true);
+      else attachGyro();
+      return;
+    }
+
+    // 데스크톱: 마우스 클라우드 패럴랙스 (글로우·그레인은 전역 FxLayer가 담당)
     const onMove = (e: MouseEvent) => {
       const x = e.clientX / innerWidth - 0.5;
       const y = e.clientY / innerHeight - 0.5;
@@ -62,7 +89,17 @@ export default function HeroV2() {
     };
     hero.addEventListener("mousemove", onMove);
     return () => hero.removeEventListener("mousemove", onMove);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const grantGyro = async () => {
+    try {
+      const ctor = DeviceOrientationEvent as DOEventCtor;
+      const res = await ctor.requestPermission!();
+      if (res === "granted") attachGyro();
+    } catch {}
+    setNeedGyroPerm(false);
+  };
 
   // headline: "…검색을 장악하고,\n…" → 줄 분리 + '장악' 강조
   const lines = profile.headline.split("\n").map((ln) =>
@@ -114,6 +151,16 @@ export default function HeroV2() {
           <a href="#contact" className={s.ctaGhost}>연락처</a>
         </div>
       </div>
+
+      {needGyroPerm && (
+        <button
+          type="button"
+          onClick={grantGyro}
+          className={s.gyroBtn}
+        >
+          📱 기울여보세요
+        </button>
+      )}
 
       <div className={s.marquee} aria-hidden>
         <div className={s.mq}>
