@@ -2,7 +2,7 @@
 
 // HeroV2 — 다크 프리미엄(Vivid Motion) × 3D 카드 클라우드(Michael Gatt) × 연출 레이어.
 // 지표·태그는 data.ts 실측값을 그대로 사용한다.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { profile, metrics } from "../data";
 import s from "./HeroV2.module.css";
@@ -30,6 +30,117 @@ function parseValue(v: string) {
   const m = v.match(/^(\D*)([\d,]+)(\D*)$/);
   if (!m) return null;
   return { pre: m[1], n: parseInt(m[2].replace(/,/g, ""), 10), suf: m[3] };
+}
+
+/* 타이핑 헤드라인 — 투명한 전체 문장으로 자리를 먼저 예약(레이아웃 시프트 차단)하고
+   그 위에 타자. 강조어('장악','자동화')는 도달 시 버밀리언 펀치. */
+type CharMeta = { ch: string; line: number; em: number; emEndIdx: number };
+
+function buildMeta(text: string, emphasis: string[]): CharMeta[] {
+  const meta: CharMeta[] = [];
+  text.split("\n").forEach((ln, li) => {
+    let i = 0;
+    while (i < ln.length) {
+      const wi = emphasis.findIndex((w) => ln.startsWith(w, i));
+      if (wi >= 0) {
+        const w = emphasis[wi];
+        for (let k = 0; k < w.length; k++) {
+          meta.push({ ch: ln[i + k], line: li, em: wi, emEndIdx: meta.length + (w.length - k) - 1 });
+        }
+        i += w.length;
+      } else {
+        meta.push({ ch: ln[i], line: li, em: -1, emEndIdx: -1 });
+        i++;
+      }
+    }
+  });
+  return meta;
+}
+
+function TypeHeadline({ text, emphasis }: { text: string; emphasis: string[] }) {
+  const meta = useMemo(() => buildMeta(text, emphasis), [text, emphasis]);
+  const [n, setN] = useState(0);
+  const done = n >= meta.length;
+
+  useEffect(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setN(meta.length);
+      return;
+    }
+    let i = 0;
+    let t: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      i++;
+      setN(i);
+      if (i < meta.length) {
+        const nx = meta[i];
+        const prev = meta[i - 1];
+        // 강조어 직전엔 잠깐 멈칫 — 기대감
+        const delay = nx.em >= 0 && prev.em !== nx.em ? 300 : 34;
+        t = setTimeout(tick, delay);
+      }
+    };
+    t = setTimeout(tick, 500);
+    return () => clearTimeout(t);
+  }, [meta]);
+
+  const lines = text.split("\n");
+  const renderLine = (li: number, upTo: number, ghost: boolean) => {
+    const out: React.ReactNode[] = [];
+    let buf = "";
+    let bufEm = -2;
+    let emDone = false;
+    const flush = (key: number) => {
+      if (!buf) return;
+      if (bufEm >= 0) {
+        out.push(
+          <em key={key} className={`${s.hem} ${!ghost && emDone ? s.punch : ""}`}>
+            {buf}
+          </em>
+        );
+      } else {
+        out.push(<span key={key}>{buf}</span>);
+      }
+      buf = "";
+    };
+    meta.forEach((m: CharMeta, idx: number) => {
+      if (m.line !== li) return;
+      if (!ghost && idx >= upTo) return;
+      if (m.em !== bufEm) {
+        flush(idx);
+        bufEm = m.em;
+      }
+      buf += m.ch;
+      emDone = m.em >= 0 && upTo > m.emEndIdx;
+    });
+    flush(9999);
+    return out;
+  };
+
+  // 현재 타이핑 중인 라인 (캐럿 위치)
+  const caretLine = done ? -1 : n > 0 ? meta[Math.min(n, meta.length - 1)].line : 0;
+
+  return (
+    <h1 className={s.headline} aria-label={text.replace("\n", " ")}>
+      {/* 자리 예약 레이어 (투명) — 페이지가 처음부터 최종 크기를 안다 */}
+      <span className={s.ghost} aria-hidden>
+        {lines.map((_, li) => (
+          <span key={li} className={s.hline}>
+            {renderLine(li, meta.length, true)}
+          </span>
+        ))}
+      </span>
+      {/* 타이핑 레이어 */}
+      <span className={s.typedLayer} aria-hidden>
+        {lines.map((_, li) => (
+          <span key={li} className={s.hline}>
+            {renderLine(li, n, false)}
+            {caretLine === li && <span className={s.caret} />}
+          </span>
+        ))}
+      </span>
+    </h1>
+  );
 }
 
 export default function HeroV2() {
@@ -119,13 +230,6 @@ export default function HeroV2() {
     setNeedGyroPerm(false);
   };
 
-  // headline: "…검색을 장악하고,\n…" → 줄 분리 + '장악' 강조
-  const lines = profile.headline.split("\n").map((ln) =>
-    ln.split("장악").flatMap((part, i) =>
-      i === 0 ? [part] : [<em key={i}>장악</em>, part]
-    )
-  );
-
   return (
     <section id="top" ref={heroRef} className={s.hero}>
       {use3d && <Hero3D onReady={() => setReady3d(true)} />}
@@ -164,13 +268,7 @@ export default function HeroV2() {
 
       <div className={s.center}>
         <p className={s.eyebrow}>Contents · Performance Marketer</p>
-        <h1 className={s.headline}>
-          {lines.map((ln, i) => (
-            <span key={i} className={s.ln}>
-              <span>{ln}</span>
-            </span>
-          ))}
-        </h1>
+        <TypeHeadline text={profile.headline} emphasis={["장악", "자동화"]} />
         <p className={s.role}>
           <b>{profile.name}</b> — 고관여 시장 3년 6개월, 성과를 시스템으로
           만드는 마케터

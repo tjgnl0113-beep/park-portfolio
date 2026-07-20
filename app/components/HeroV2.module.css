@@ -135,22 +135,39 @@
   letter-spacing: -0.035em;
   white-space: nowrap;
 }
-.ln {
+/* 타이핑 헤드라인 — ghost가 자리를 예약, typedLayer가 그 위에 타자 */
+.headline { position: relative; }
+.hline { display: block; }
+.ghost { visibility: hidden; }
+.ghost .hline { display: block; }
+.typedLayer {
+  position: absolute;
+  inset: 0;
   display: block;
-  overflow: hidden;
 }
-.ln > span {
-  display: block;
-  transform: translateY(112%);
-  animation: rise2 1s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.ln:nth-child(1) > span { animation-delay: 0.25s; }
-.ln:nth-child(2) > span { animation-delay: 0.4s; }
-.headline em {
+.hem {
   font-style: normal;
   color: #e63a0f;
+  display: inline-block;
 }
-@keyframes rise2 { to { transform: translateY(0); } }
+.punch {
+  animation: punch 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes punch {
+  0% { transform: scale(1.32); filter: brightness(1.8) drop-shadow(0 0 18px rgba(230, 58, 15, 0.8)); }
+  100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 0 rgba(230, 58, 15, 0)); }
+}
+.caret {
+  display: inline-block;
+  width: 0.09em;
+  height: 0.82em;
+  margin-left: 0.06em;
+  background: #e63a0f;
+  vertical-align: baseline;
+  transform: translateY(0.08em);
+  animation: blink 0.7s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
 @keyframes fadeup {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
@@ -245,7 +262,7 @@
 @keyframes mq { to { transform: translateX(-50%); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .fcard, .eyebrow, .role, .ctas, .marquee, .ln > span { animation: none !important; transform: none !important; opacity: 1 !important; }
+  .fcard, .eyebrow, .role, .ctas, .marquee, .punch, .caret { animation: none !important; transform: none !important; opacity: 1 !important; }
   .mq { animation: none; }
   .grain { animation: none; }
   .cloud { transition: none; }
