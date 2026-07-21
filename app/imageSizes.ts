@@ -1,4 +1,4 @@
-// 자동 생성: node scripts 참조 — 이미지 로드 CLS 방지용 실측 크기
+// 자동 생성 — 이미지 로드 CLS 방지용 실측 크기
 export const IMG_SIZES: Record<string, { w: number; h: number }> = {
   "/projects/blog1.webp": {
     "w": 1258,
@@ -84,6 +84,10 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1600,
     "h": 1550
   },
+  "/projects/lead-hd.jpg": {
+    "w": 860,
+    "h": 1864
+  },
   "/projects/lead-step.webp": {
     "w": 1600,
     "h": 1000
@@ -104,6 +108,10 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1600,
     "h": 1175
   },
+  "/projects/magazine-hd.jpg": {
+    "w": 2880,
+    "h": 1800
+  },
   "/projects/magazine.webp": {
     "w": 1600,
     "h": 1000
@@ -120,6 +128,14 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1600,
     "h": 759
   },
+  "/projects/saju-hd.jpg": {
+    "w": 860,
+    "h": 1864
+  },
+  "/projects/saju-input-hd.jpg": {
+    "w": 860,
+    "h": 1864
+  },
   "/projects/saju-input.webp": {
     "w": 1600,
     "h": 1000
@@ -128,9 +144,17 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1600,
     "h": 1000
   },
+  "/projects/studio-publish-hd.jpg": {
+    "w": 2880,
+    "h": 1800
+  },
   "/projects/studio-publish.webp": {
     "w": 1600,
     "h": 1005
+  },
+  "/projects/studio-seo-hd.jpg": {
+    "w": 2880,
+    "h": 1800
   },
   "/projects/studio-seo.webp": {
     "w": 1600,

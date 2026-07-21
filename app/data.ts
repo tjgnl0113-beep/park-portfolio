@@ -111,7 +111,7 @@ export const projects: Project[] = [
     cover: "/projects/lead-admin.webp", // 카드 커버는 꽉 차는 대시보드로(랜딩은 좌우 여백 큼)
     images: [
       {
-        src: "/projects/lead.webp",
+        src: "/projects/lead-hd.jpg",
         caption: "광고 랜딩 — 1분 진단 후킹",
         note: "광고로 들어온 직후 첫 화면. ‘상담 신청’을 바로 요구하지 않고 ‘1분 자격조회’로 마찰을 낮춰 클릭을 유도한다. 무료·1분 소요를 명시해 진입 장벽 제거.",
       },
@@ -183,7 +183,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "Supabase", "Claude API", "GPT 이미지", "GSC/GA4 API", "WP REST"],
     images: [
       {
-        src: "/projects/magazine.webp",
+        src: "/projects/magazine-hd.jpg",
         caption: "발행된 법률 매거진 홈",
         note: "the-edit 스타일 에디토리얼 레이아웃. 카테고리·발행일·작성자(법인)를 구조화해 SEO 작성자 스키마까지 챙겼다.",
       },
@@ -203,12 +203,12 @@ export const projects: Project[] = [
         note: "‘시세 6억 아파트라면…’ 같은 구체 사례로 어려운 개념을 풀고 핵심 문장은 굵게 강조. PASONA(문제→공감→해결) 흐름으로 마지막에 변제금 진단 CTA로 연결한다.",
       },
       {
-        src: "/projects/studio-publish.webp",
+        src: "/projects/studio-publish-hd.jpg",
         caption: "발행 스튜디오 — 발행 관리 3패널",
         note: "왼쪽 캘린더로 기획, 가운데 실제 테마 미리보기, 오른쪽에서 SEO 점수(92점)·예약 발행. ‘월 100건’ 발행을 사람이 아니라 시스템이 돌린다.",
       },
       {
-        src: "/projects/studio-seo.webp",
+        src: "/projects/studio-seo-hd.jpg",
         caption: "검색 노출 분석 대시보드",
         note: "GSC·GA4 직접 연동. 총 노출·클릭·CTR·평균순위와 함께, 구글 검색뿐 아니라 직접·소셜 유입까지 출처별로 본다.",
       },
@@ -260,12 +260,12 @@ export const projects: Project[] = [
     stack: ["Next.js", "Supabase", "Claude API", "토스페이먼츠"],
     images: [
       {
-        src: "/projects/saju.webp",
+        src: "/projects/saju-hd.jpg",
         caption: "서비스 랜딩",
         note: "사주를 ‘아씨가 써주는 편지’ 컨셉으로 풀어 진입 장벽을 낮췄다. ‘무료로 편지 받기’ 단일 CTA로 전환 동선을 단순화.",
       },
       {
-        src: "/projects/saju-input.webp",
+        src: "/projects/saju-input-hd.jpg",
         caption: "사주 정보 입력 플로우",
         note: "생년월일시를 받아 결과를 생성. 무료 미리보기 → 결제 → 전체 언락으로 이어지는 전환 동선의 출발점이다.",
       },
