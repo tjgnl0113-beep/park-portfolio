@@ -116,6 +116,30 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1600,
     "h": 1000
   },
+  "/projects/myoun-daeun.jpg": {
+    "w": 696,
+    "h": 332
+  },
+  "/projects/myoun-free.jpg": {
+    "w": 860,
+    "h": 1864
+  },
+  "/projects/myoun-gunghap.jpg": {
+    "w": 860,
+    "h": 1864
+  },
+  "/projects/myoun-home.jpg": {
+    "w": 860,
+    "h": 1864
+  },
+  "/projects/myoun-opening.jpg": {
+    "w": 860,
+    "h": 1864
+  },
+  "/projects/myoun-result.jpg": {
+    "w": 860,
+    "h": 1864
+  },
   "/projects/result-funnel.webp": {
     "w": 1561,
     "h": 780
