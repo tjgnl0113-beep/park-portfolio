@@ -108,7 +108,7 @@ export const projects: Project[] = [
       "전환을 의도적으로 설계한 퍼널 구조(게이팅 위치 실험)로 광고 채널 효율 최적화",
     ],
     stack: ["Next.js", "Supabase", "Vercel", "Telegram", "Google Sheets"],
-    cover: "/projects/lead-admin.webp", // 카드 커버는 꽉 차는 대시보드로(랜딩은 좌우 여백 큼)
+    cover: "/projects/lead-funnel-cover.jpg",
     images: [
       {
         src: "/projects/lead-hd.jpg",
@@ -168,6 +168,7 @@ export const projects: Project[] = [
   },
   {
     slug: "magazine-studio",
+    cover: "/projects/magazine-studio-cover.jpg",
     group: "service",
     tag: "AI 콘텐츠 자동화",
     title: "법률 매거진 발행 스튜디오",
@@ -259,6 +260,7 @@ export const projects: Project[] = [
       "실운영: 토스페이먼츠 라이브 결제 + 이중결제 방지 + 결과 유실 방지 3중 + 결제 진입 리드 알림(광고 측정)",
     ],
     stack: ["Next.js", "Supabase", "Claude API", "토스페이먼츠"],
+    cover: "/projects/ai-saju-cover.jpg",
     images: [
       {
         src: "/projects/myoun-home.jpg",
@@ -326,6 +328,7 @@ export const projects: Project[] = [
   // ── 콘텐츠 운영 자동화 도구 ───────────────────────────────
   {
     slug: "blog-autopost",
+    cover: "/projects/blog-autopost-cover.jpg",
     group: "automation",
     tag: "블로그 자동화",
     title: "네이버 블로그 자동 발행 프로그램",
@@ -391,6 +394,7 @@ export const projects: Project[] = [
   },
   {
     slug: "cafe-autopost",
+    cover: "/projects/cafe-autopost-cover.jpg",
     group: "automation",
     tag: "카페 운영 자동화",
     title: "네이버 카페 운영 자동화 (발행·댓글·랭킹)",
@@ -471,6 +475,7 @@ export const projects: Project[] = [
   },
   {
     slug: "cafe-guerrilla",
+    cover: "/projects/cafe-guerrilla-cover.jpg",
     group: "automation",
     tag: "통합검색 노출 (게릴라)",
     title: "카페 게릴라 — 통합검색 1페이지 노출",
@@ -516,6 +521,7 @@ export const projects: Project[] = [
   },
   {
     slug: "blog-engage",
+    cover: "/projects/blog-engage-cover.jpg",
     group: "automation",
     tag: "인게이지먼트 자동화",
     title: "블로그 공감·스크랩·댓글 자동화",
@@ -554,6 +560,7 @@ export const projects: Project[] = [
   },
   {
     slug: "seo-engine",
+    cover: "/projects/seo-engine-cover.jpg",
     group: "automation",
     tag: "검색 로직 · SEO 엔진",
     title: "네이버 검색 로직 분석·SEO 자동화",
@@ -592,6 +599,7 @@ export const projects: Project[] = [
   },
   {
     slug: "cardnews",
+    cover: "/projects/cardnews-cover.jpg",
     group: "automation",
     tag: "OSMU · 콘텐츠 제작",
     title: "카드뉴스·숏폼 자동 제작 도구",

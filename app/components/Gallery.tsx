@@ -39,7 +39,7 @@ export default function Gallery({
 
   return (
     <>
-      <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-2 items-start gap-4 sm:gap-5 lg:grid-cols-3">
         {images.map((shot, i) => (
           <figure
             key={i}

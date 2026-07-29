@@ -1,5 +1,17 @@
 // 자동 생성 — 이미지 로드 CLS 방지용 실측 크기
 export const IMG_SIZES: Record<string, { w: number; h: number }> = {
+  "/projects/ai-saju-cover.jpg": {
+    "w": 2400,
+    "h": 1500
+  },
+  "/projects/blog-autopost-cover.jpg": {
+    "w": 2400,
+    "h": 1500
+  },
+  "/projects/blog-engage-cover.jpg": {
+    "w": 2400,
+    "h": 1500
+  },
   "/projects/blog1.webp": {
     "w": 1258,
     "h": 843
@@ -32,6 +44,14 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1033,
     "h": 722
   },
+  "/projects/cafe-autopost-cover.jpg": {
+    "w": 2400,
+    "h": 1500
+  },
+  "/projects/cafe-guerrilla-cover.jpg": {
+    "w": 2400,
+    "h": 1500
+  },
   "/projects/cafe1.webp": {
     "w": 1377,
     "h": 857
@@ -56,6 +76,10 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1600,
     "h": 777
   },
+  "/projects/cardnews-cover.jpg": {
+    "w": 2400,
+    "h": 1500
+  },
   "/projects/cardnews-instagram-1.webp": {
     "w": 1600,
     "h": 764
@@ -79,6 +103,10 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
   "/projects/lead-admin.webp": {
     "w": 1268,
     "h": 578
+  },
+  "/projects/lead-funnel-cover.jpg": {
+    "w": 2400,
+    "h": 1500
   },
   "/projects/lead-funnel.webp": {
     "w": 1600,
@@ -111,6 +139,10 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
   "/projects/magazine-hd.jpg": {
     "w": 2880,
     "h": 1800
+  },
+  "/projects/magazine-studio-cover.jpg": {
+    "w": 2400,
+    "h": 1500
   },
   "/projects/magazine.webp": {
     "w": 1600,
@@ -171,6 +203,10 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
   "/projects/saju.webp": {
     "w": 1600,
     "h": 1000
+  },
+  "/projects/seo-engine-cover.jpg": {
+    "w": 2400,
+    "h": 1500
   },
   "/projects/studio-publish-hd.jpg": {
     "w": 2880,

@@ -30,29 +30,45 @@ export type StageProject = {
 function CoverPlane({ url, d }: { url: string; d: number }) {
   const tex = useTexture(url);
   const img = tex.image as { width: number; height: number } | undefined;
-  const aspect = img ? img.height / img.width : 0.62;
-  const w = 5.6;
+  const aspect = img ? img.height / img.width : 0.62; // h/w
+  // 고정 박스(MAXW×MAXH)에 contain — 세로 폰/가로 대시보드가 같은 footprint를 갖는다
+  const MAXW = 5.0;
+  const MAXH = 3.4;
+  let w = MAXW;
+  let h = MAXW * aspect;
+  if (h > MAXH) {
+    h = MAXH;
+    w = MAXH / aspect;
+  }
+  const opacity = Math.max(0, 1 - Math.abs(d) * 1.15);
   return (
-    <mesh
+    <group
       position={[d * 7.5, d * -0.6, -Math.abs(d) * 5]}
       rotation={[0, d * -1.1, d * -0.08]}
     >
-      <planeGeometry args={[w, w * aspect]} />
-      <meshBasicMaterial map={tex} transparent opacity={Math.max(0, 1 - Math.abs(d) * 1.15)} toneMapped={false} />
-    </mesh>
+      {/* 다크 베젤 — 밝은 스크린샷을 어두운 씬에 카드처럼 안착 */}
+      <RoundedBox args={[w + 0.3, h + 0.3, 0.12]} radius={0.06} smoothness={3} position={[0, 0, -0.03]}>
+        <meshStandardMaterial color="#141416" roughness={0.5} metalness={0.25} transparent opacity={opacity} />
+      </RoundedBox>
+      {/* 스크린샷 */}
+      <mesh position={[0, 0, 0.045]}>
+        <planeGeometry args={[w, h]} />
+        <meshBasicMaterial map={tex} transparent opacity={opacity} toneMapped={false} />
+      </mesh>
+    </group>
   );
 }
 
 function TitleCard({ title, tag, d }: { title: string; tag: string; d: number }) {
   return (
     <group position={[d * 7.5, d * -0.6, -Math.abs(d) * 5]} rotation={[0, d * -1.1, d * -0.08]}>
-      <RoundedBox args={[5.6, 3.4, 0.16]} radius={0.04} smoothness={3}>
+      <RoundedBox args={[5.0, 3.4, 0.16]} radius={0.06} smoothness={3}>
         <meshStandardMaterial color="#141416" roughness={0.4} metalness={0.3} transparent opacity={Math.max(0, 1 - Math.abs(d) * 1.15)} />
       </RoundedBox>
       <Text font={FONT_BOLD} fontSize={0.24} color={ACCENT} anchorX="center" anchorY="middle" position={[0, 0.5, 0.1]}>
         {tag}
       </Text>
-      <Text font={FONT_BOLD} fontSize={0.4} color="#ffffff" anchorX="center" anchorY="middle" position={[0, -0.15, 0.1]} maxWidth={4.8} textAlign="center">
+      <Text font={FONT_BOLD} fontSize={0.4} color="#ffffff" anchorX="center" anchorY="middle" position={[0, -0.15, 0.1]} maxWidth={4.4} textAlign="center">
         {title}
       </Text>
     </group>
