@@ -116,9 +116,13 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1600,
     "h": 1000
   },
-  "/projects/myoun-daeun.jpg": {
-    "w": 696,
-    "h": 332
+  "/projects/myoun-ch-daeun.jpg": {
+    "w": 860,
+    "h": 1864
+  },
+  "/projects/myoun-ch-money.jpg": {
+    "w": 860,
+    "h": 1864
   },
   "/projects/myoun-free.jpg": {
     "w": 860,
