@@ -243,7 +243,7 @@ export default function CaseStudyPage({
                 </div>
               ))}
             </div>
-            <p className="mt-2 text-xs text-faint">※ 직접 만든 관리자 대시보드로 추적한 실측 데이터.</p>
+            <p className="mt-2 text-xs text-faint">{cs.metricsNote ?? "※ 직접 만든 관리자 대시보드로 추적한 실측 데이터."}</p>
           </div>
         )}
         <ul className="max-w-2xl space-y-3">

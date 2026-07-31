@@ -204,6 +204,26 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1600,
     "h": 1000
   },
+  "/projects/searchlens-cover.jpg": {
+    "w": 2400,
+    "h": 1500
+  },
+  "/projects/searchlens-home.jpg": {
+    "w": 2880,
+    "h": 1800
+  },
+  "/projects/searchlens-monitor.jpg": {
+    "w": 2880,
+    "h": 1800
+  },
+  "/projects/searchlens-result.jpg": {
+    "w": 2880,
+    "h": 1800
+  },
+  "/projects/searchlens-result2.jpg": {
+    "w": 2880,
+    "h": 1800
+  },
   "/projects/seo-engine-cover.jpg": {
     "w": 2400,
     "h": 1500

@@ -59,6 +59,7 @@ export type CaseStudy = {
   takeaway: string; // 한 줄 결론 — 케이스를 닫는 테이크어웨이(채용담당자용)
   background?: string; // 배경 — 어떤 상황에서 왜 이걸 직접 만들기로 했나(1인칭 동기)
   metrics?: { value: string; label: string }[]; // 결과 상단 실측 지표(진짜 숫자 있을 때만)
+  metricsNote?: string; // 지표 아래 캡션(기본: 관리자 대시보드 추적 실측). 제품 사양 등 성격이 다르면 지정.
 };
 
 export type Shot = { src: string; caption?: string; note?: string };
@@ -93,6 +94,75 @@ export const projectGroups: { key: Project["group"]; title: string; desc: string
 
 export const projects: Project[] = [
   // ── 서비스 · 웹 프로덕트 ──────────────────────────────────
+  {
+    slug: "searchlens",
+    group: "service",
+    tag: "SEO · AEO · GEO 진단",
+    title: "SearchLens — 검색·AI 노출 진단 엔진",
+    oneLiner:
+      "URL 한 줄로 SEO·답변엔진·AI 검색 노출을 6개 영역 122개 항목으로 자동 진단하고, 실제 AI 검색이 내 브랜드를 인용하는지까지 측정하는 웹 도구.",
+    proves:
+      "검색 상위 노출을 만들어온 노하우를, ‘122개 룰 엔진 + 실 AI 인용 측정’이라는 작동하는 제품으로 코드화한 — SEO를 넘어 AEO·GEO까지 아우르는 검색 전문성의 증거.",
+    bullets: [
+      "URL 입력 → 서버가 HTML을 직접 크롤·파싱해 SEO·AEO·GEO·성능·접근성·콘텐츠 6개 영역 122개 항목을 심각도 가중으로 채점, 종합 A~F 등급과 ‘가장 시급한 항목’을 자동 제시",
+      "AEO(답변엔진)와 GEO(AI 검색)를 별도 영역으로 분리 진단 — 스니펫·FAQ 채택 준비도와, AI 크롤러 허용·llms.txt·구조화 데이터 같은 ‘AI가 인용할 준비’를 각각 점검",
+      "실제 ChatGPT·Perplexity·Gemini 웹검색에 구매자 프롬프트를 돌려, 내 도메인의 인용 점유율(share of voice)과 경쟁사 대비를 측정하고 추이를 저장",
+    ],
+    stack: ["Next.js", "TypeScript", "Cheerio", "OpenAI · Perplexity · Gemini", "PageSpeed API", "Supabase", "Vercel"],
+    cover: "/projects/searchlens-cover.jpg",
+    images: [
+      {
+        src: "/projects/searchlens-result.jpg",
+        caption: "진단 리포트 — 종합점수 + 6영역 등급",
+        note: "URL 한 줄을 넣으면 나오는 결과 화면. 종합점수(예: 80·B)와 SEO·AEO·GEO·성능·접근성·콘텐츠 6개 영역을 A~F로 채점한다. 대행사 리포트처럼 용어만 어렵지 않게, ‘무엇을 먼저 고칠지’를 등급으로 보여주는 데 집중했다.",
+      },
+      {
+        src: "/projects/searchlens-result2.jpg",
+        caption: "가장 시급한 항목 (PRIORITY)",
+        note: "122개 항목 중 점수를 가장 많이 깎은 위험 항목을 영역별로 뽑아 상단에 배치. 각 항목마다 ‘왜 문제인지 + 어떻게 고치는지’ 권장안을 함께 준다 — 진단으로 끝나지 않고 실행으로 이어지게.",
+      },
+      {
+        src: "/projects/searchlens-home.jpg",
+        caption: "홈 — Website X-ray",
+        note: "‘검색이 보는 걸, 당신도 보게.’ 도메인만 넣으면 로그인 없이 3초 만에 스캔이 시작된다. 상담 신청 전에 스스로 진단해보게 만드는, 마케터가 설계한 진입 후킹.",
+      },
+      {
+        src: "/projects/searchlens-monitor.jpg",
+        caption: "AI 인용 모니터 — Share of Voice",
+        note: "구매자 프롬프트를 실제 AI 검색에 돌려 내 도메인이 인용·언급되는 비율과 경쟁사 대비를 측정한다. (포트폴리오 라이브 데모에는 유료 AI 호출 비용을 묶는 보호 캡을 직접 걸어뒀다.)",
+      },
+    ],
+    live: "https://searchlens-myark.vercel.app",
+    caseStudy: {
+      role: "기획 · 개발 · 운영 (1인)",
+      context: "검색·답변엔진·AI 검색 노출 통합 진단 웹 도구",
+      background:
+        "법률·전문직 콘텐츠로 검색 상위를 만들어오면서, 클라이언트에게 늘 같은 질문을 받았습니다. ‘왜 우리는 검색에 안 뜨나요?’ 그런데 이제 그 ‘검색’이 구글만이 아니라 ChatGPT·Perplexity 같은 AI 답변까지 넓어졌는데, 정작 ‘어디가 막혔는지’를 한 화면으로 보여줄 도구가 없었습니다. 기존 SEO 도구는 메타태그·속도 위주라 AEO·GEO를 못 짚고, ‘AI가 우리를 인용하냐’는 아예 측정이 안 됐죠. 그래서 제가 매일 쓰는 진단 체크리스트를 아예 작동하는 엔진으로 만들기로 했습니다.",
+      problem:
+        "검색 최적화가 구글 SEO를 넘어 답변엔진(AEO)·AI 검색(GEO)까지 확장됐지만, 세 가지를 한 번에 진단하고 ‘AI가 실제로 우리를 인용하는지’까지 보여주는 도구가 없었습니다.",
+      cause:
+        "기존 SEO 진단 도구는 메타·속도·링크 같은 전통 항목에 머물러, 스니펫 채택 준비도(AEO)나 AI 크롤러 허용·구조화 데이터 같은 인용 준비(GEO)를 다루지 못합니다. 게다가 ‘ChatGPT가 우리 사이트를 근거로 답하는가’는 측정 자체가 빠져 있어, AI 검색 노출을 감으로만 이야기해야 했습니다.",
+      solution: [
+        "6개 영역 122개 항목의 룰 엔진을 직접 설계 — 서버가 대상 페이지 HTML을 크롤·파싱하고 항목마다 양호/주의/위험을 심각도 가중으로 채점해 A~F 등급과 우선 개선안을 산출",
+        "AEO와 GEO를 별도 영역으로 분리해, ‘답변 영역 채택’과 ‘AI 인용 준비(크롤러 허용·llms.txt·JSON-LD·자급자족 문단)’를 각각 진단",
+        "실제 ChatGPT·Perplexity·Gemini 웹검색에 구매자 프롬프트를 돌려 내 도메인의 인용 점유율과 경쟁사 대비를 측정하고, 매 실행을 저장해 개선 추이를 추적",
+        "포트폴리오 공개 데모에는 유료 AI 호출을 유한하게 묶는 보호 캡(요청 하드캡 + IP·전역 24시간 상한)을 직접 구현",
+      ],
+      result: [
+        "URL 한 줄이면 6개 영역 등급과 ‘가장 시급한 항목’이 자동으로 나와, 클라이언트에게 ‘어디가 왜 막혔는지’를 감이 아니라 화면으로 설명할 수 있게 됐다.",
+        "SEO에 더해 AEO·GEO를 분리 진단하면서, 이제 막 중요해진 ‘AI 검색 노출’ 준비도까지 한 도구로 다루게 됐다.",
+        "실제 AI 검색 인용을 측정·추이 저장하면서, ‘AI가 우리를 인용하게 만드는’ 작업의 전후를 데이터로 증명할 수 있는 기반을 만들었다.",
+      ],
+      metrics: [
+        { value: "122", label: "진단 항목" },
+        { value: "6", label: "진단 영역(SEO·AEO·GEO·성능·접근성·콘텐츠)" },
+        { value: "3", label: "연동 AI 검색 엔진" },
+      ],
+      metricsNote: "※ 진단 엔진이 실제로 검사·연동하는 범위(제품 사양).",
+      takeaway:
+        "검색 상위 노출을 만들어온 마케터의 노하우를, SEO를 넘어 AEO·GEO까지 진단하고 ‘AI가 실제로 인용하는지’까지 측정하는 작동하는 엔진으로 직접 제품화한 프로젝트.",
+    },
+  },
   {
     slug: "lead-funnel",
     group: "service",
