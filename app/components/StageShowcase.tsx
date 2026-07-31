@@ -5,6 +5,7 @@
 // 텍스트 정보는 우측 HTML 패널(선명도·접근성 유지). 게이트 실패 시 children(기존 그리드) 폴백.
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { RoundedBox, Text, useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -27,7 +28,7 @@ export type StageProject = {
 
 /* ── 3D 무대 ─────────────────────────────────────────── */
 
-function CoverPlane({ url, d }: { url: string; d: number }) {
+function CoverPlane({ url, d, slug, onOpen }: { url: string; d: number; slug?: string; onOpen?: (slug: string) => void }) {
   const tex = useTexture(url);
   const img = tex.image as { width: number; height: number } | undefined;
   const aspect = img ? img.height / img.width : 0.62; // h/w
@@ -41,10 +42,15 @@ function CoverPlane({ url, d }: { url: string; d: number }) {
     w = MAXH / aspect;
   }
   const opacity = Math.max(0, 1 - Math.abs(d) * 1.15);
+  // 무대 중앙(정면)에 온 작품의 커버만 클릭 가능 — 회전 중인 커버 오클릭 방지
+  const active = Math.abs(d) < 0.4 && !!slug && !!onOpen;
   return (
     <group
       position={[d * 7.5, d * -0.6, -Math.abs(d) * 5]}
       rotation={[0, d * -1.1, d * -0.08]}
+      onClick={(e) => { if (active) { e.stopPropagation(); onOpen!(slug!); } }}
+      onPointerOver={(e) => { if (active) { e.stopPropagation(); document.body.style.cursor = "pointer"; } }}
+      onPointerOut={() => { document.body.style.cursor = "auto"; }}
     >
       {/* 다크 베젤 — 밝은 스크린샷을 어두운 씬에 카드처럼 안착 */}
       <RoundedBox args={[w + 0.3, h + 0.3, 0.12]} radius={0.06} smoothness={3} position={[0, 0, -0.03]}>
@@ -95,7 +101,7 @@ function TagChip({ label, d, offset }: { label: string; d: number; offset: [numb
   );
 }
 
-function StageScene({ projects, progress }: { projects: StageProject[]; progress: React.MutableRefObject<number> }) {
+function StageScene({ projects, progress, onOpen }: { projects: StageProject[]; progress: React.MutableRefObject<number>; onOpen?: (slug: string) => void }) {
   const group = useRef<THREE.Group>(null);
   const [p, setP] = useState(0);
 
@@ -118,7 +124,7 @@ function StageScene({ projects, progress }: { projects: StageProject[]; progress
         if (Math.abs(d) > 1.05) return null;
         return (
           <group key={pr.title}>
-            {pr.cover ? <CoverPlane url={pr.cover} d={d} /> : <TitleCard title={pr.title} tag={pr.tag} d={d} />}
+            {pr.cover ? <CoverPlane url={pr.cover} d={d} slug={pr.slug} onOpen={onOpen} /> : <TitleCard title={pr.title} tag={pr.tag} d={d} />}
             <TagChip label={pr.tag} d={d} offset={[2.4, 2.1, 0.6]} />
             {pr.stack[0] && <TagChip label={pr.stack[0]} d={d} offset={[-2.8, -1.9, 0.8]} />}
           </group>
@@ -147,6 +153,15 @@ export default function StageShowcase({
   const wrapRef = useRef<HTMLDivElement>(null);
   const progress = useRef(0);
   const [idx, setIdx] = useState(0);
+  const router = useRouter();
+  // 라우터 컨텍스트가 Canvas 경계를 못 넘으므로, 이동 콜백을 바깥에서 주입한다.
+  const openCase = (slug: string) => router.push(`/projects/${slug}`);
+
+  // 스크롤로 중앙 작품이 바뀌면 커서 상태 초기화(포인터 고착 방지)
+  useEffect(() => {
+    document.body.style.cursor = "auto";
+    return () => { document.body.style.cursor = "auto"; };
+  }, [idx]);
 
   useEffect(() => {
     try {
@@ -194,7 +209,7 @@ export default function StageShowcase({
           <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 7.4], fov: 40 }} gl={{ antialias: true, alpha: true }}>
             <Suspense fallback={null}>
               <StageReady onReady={() => setReady(true)} />
-              <StageScene projects={projects} progress={progress} />
+              <StageScene projects={projects} progress={progress} onOpen={openCase} />
             </Suspense>
           </Canvas>
         </div>
