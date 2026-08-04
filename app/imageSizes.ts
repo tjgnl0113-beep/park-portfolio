@@ -72,13 +72,17 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1377,
     "h": 862
   },
-  "/projects/cardnews-caption.webp": {
-    "w": 1600,
-    "h": 777
+  "/projects/cardnews-caption-ev.jpg": {
+    "w": 1745,
+    "h": 854
   },
   "/projects/cardnews-cover.jpg": {
     "w": 2400,
     "h": 1500
+  },
+  "/projects/cardnews-feed.jpg": {
+    "w": 1885,
+    "h": 844
   },
   "/projects/cardnews-instagram-1.webp": {
     "w": 1600,

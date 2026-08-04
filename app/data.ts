@@ -685,24 +685,24 @@ export const projects: Project[] = [
     stack: ["React", "Canvas", "ffmpeg"],
     images: [
       {
+        src: "/projects/cardnews-feed.jpg",
+        caption: "오늘의 자동차 뉴스 자동 수집",
+        note: "5개 소스를 훑어 그날의 기사를 점수와 함께 모아준다. 마음에 드는 기사 옆 ‘카드 만들기’ 한 번이면 제작으로 직행 — ‘터지는 소재’를 찾는 단계부터 자동화했다.",
+      },
+      {
         src: "/projects/cardnews-instagram-1.webp",
         caption: "주제·URL만 넣으면 카드 자동 생성",
-        note: "기사 URL이나 주제만 입력하면 콘텐츠 팩 기반으로 카드 슬라이드를 자동 생성한다. 소재 수급부터 제작까지 한 번에 — ‘좋은 소재의 확산 속도’를 제작이 못 따라가던 병목을 없앤다.",
+        note: "기사 URL이나 주제만 입력하면 콘텐츠 팩 기반으로 카드 슬라이드를 자동 생성한다. 슬라이드 비율(4:5/9:16)·PNG·MP4·SVG 내보내기까지 — 제작 병목을 없앤다.",
       },
       {
-        src: "/projects/cardnews.webp",
-        caption: "카드뉴스·숏폼 에디터 — 채워진 카드",
-        note: "한 장의 카드에 핵심 메시지를 담는다. 제목 카피가 후킹의 8할 — 슬라이드 비율(4:5/9:16)·PNG·MP4·SVG 내보내기 지원.",
-      },
-      {
-        src: "/projects/cardnews-caption.webp",
+        src: "/projects/cardnews-caption-ev.jpg",
         caption: "AI 캡션 자동 생성",
-        note: "카드 내용을 SNS 캡션(본문·해시태그)으로 자동 변환 — 한 소재를 카드 + 캡션으로 OSMU 확산.",
+        note: "카드 내용을 SNS 캡션(본문·해시태그)으로 자동 변환 — 한 소재를 카드 + 캡션으로 OSMU 확산. 슬라이드마다 다른 소재도 같은 파이프라인으로 처리.",
       },
       {
         src: "/projects/cardnews-instagram.webp",
         caption: "실제 발행 예시 — cartrend.kr 인스타그램",
-        note: "이 도구로 만든 카드뉴스가 실제 인스타그램에 게시된 모습. 제작 → 캡션 → 발행까지 이어지는 실전 결과물.",
+        note: "이 도구로 만든 카드뉴스가 실제 인스타그램에 게시된 모습. 수집 → 제작 → 캡션 → 발행까지 이어지는 실전 결과물.",
       },
     ],
     caseStudy: {
