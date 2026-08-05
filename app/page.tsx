@@ -287,49 +287,68 @@ function Projects() {
           </p>
         </Reveal>
 
-        <StageShowcase
-          projects={projectGroups.flatMap((g) =>
-            projects
-              .filter((p) => p.group === g.key)
-              .map(
-                (p): StageProject => ({
-                  title: p.title,
-                  tag: p.tag,
-                  oneLiner: p.oneLiner,
-                  proves: p.proves,
-                  stack: p.stack,
-                  cover: p.cover ?? p.images?.[0]?.src,
-                  slug: p.slug,
-                  live: p.live,
-                  groupTitle: g.title,
-                })
-              )
-          )}
-        >
-          {projectGroups.map((g) => {
-          const items = projects.filter((p) => p.group === g.key);
-          if (!items.length) return null;
+        {(() => {
+          // 대표 4개만 무대에 부각(사용자 지정 순서), 나머지는 아래 '더 보기'로 접는다.
+          const FEATURED = ["magazine-studio", "lead-funnel", "ai-saju", "searchlens"];
+          const featured = FEATURED
+            .map((s) => projects.find((p) => p.slug === s))
+            .filter((p): p is Project => !!p);
+          const rest = projects.filter((p) => !FEATURED.includes(p.slug ?? ""));
+          const restGroup = projectGroups.find((g) => g.key === "automation");
           return (
-            <div key={g.key} className="mt-16 first:mt-12">
-              <Reveal>
-                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                  <h3 className="text-xl font-extrabold tracking-tight text-white">{g.title}</h3>
-                  <span className="text-sm text-faint">{g.desc}</span>
+            <>
+              <StageShowcase
+                projects={featured.map(
+                  (p): StageProject => ({
+                    title: p.title,
+                    tag: p.tag,
+                    oneLiner: p.oneLiner,
+                    proves: p.proves,
+                    stack: p.stack,
+                    cover: p.cover ?? p.images?.[0]?.src,
+                    slug: p.slug,
+                    live: p.live,
+                    groupTitle: "대표 프로젝트",
+                  })
+                )}
+              >
+                {/* 모바일·폴백: 대표 4개 카드 */}
+                <div className="mt-10 grid gap-6 md:grid-cols-2">
+                  {featured.map((p) => (
+                    <Reveal key={p.title} className="c3e">
+                      <Tilt max={8} className="spar h-full">
+                        <ProjectCard p={p} />
+                      </Tilt>
+                    </Reveal>
+                  ))}
                 </div>
-              </Reveal>
-              <div className="mt-7 grid gap-6 md:grid-cols-2">
-                {items.map((p) => (
-                  <Reveal key={p.title} className="c3e">
-                    <Tilt max={8} className="spar h-full">
-                      <ProjectCard p={p} />
-                    </Tilt>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
+              </StageShowcase>
+
+              {rest.length > 0 && (
+                <details className="group mt-16">
+                  <summary className="mx-auto flex w-fit cursor-pointer list-none items-center gap-2.5 rounded-full border border-line bg-white/[0.03] px-6 py-3 text-sm font-semibold text-sub transition hover:border-accent/40 hover:text-white [&::-webkit-details-marker]:hidden">
+                    {restGroup?.title ?? "그 외 프로젝트"} {rest.length}가지 더 보기
+                    <span className="text-accent transition-transform duration-300 group-open:rotate-180">▾</span>
+                  </summary>
+                  <div className="mt-10">
+                    {restGroup?.desc && (
+                      <p className="mb-7 text-center text-sm text-faint">{restGroup.desc}</p>
+                    )}
+                    <div className="grid gap-6 md:grid-cols-2">
+                      {rest.map((p) => (
+                        <Reveal key={p.title} className="c3e">
+                          <Tilt max={8} className="spar h-full">
+                            <ProjectCard p={p} />
+                          </Tilt>
+                        </Reveal>
+                      ))}
+                    </div>
+                  </div>
+                </details>
+              )}
+            </>
           );
-        })}
-        </StageShowcase>
+        })()}
       </div>
     </section>
   );
