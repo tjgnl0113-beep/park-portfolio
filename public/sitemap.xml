@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://park-portfolio-eta.vercel.app/</loc><priority>1.0</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/ai-saju</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/blog-autopost</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/blog-engage</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/cafe-autopost</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/cafe-guerrilla</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/cardnews</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/lead-funnel</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/magazine-studio</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/searchlens</loc><priority>0.8</priority></url>
+  <url><loc>https://park-portfolio-eta.vercel.app/projects/seo-engine</loc><priority>0.8</priority></url>
+</urlset>

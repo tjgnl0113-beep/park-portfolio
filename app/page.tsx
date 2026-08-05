@@ -143,9 +143,9 @@ function Differentiator() {
               </h2>
               <p className="mt-7 max-w-3xl text-base leading-relaxed text-white/85 md:text-lg">
                 대부분의 마케터는 남이 만든 도구를 씁니다. 저는 콘텐츠 발행, SEO 분석,
-                상담 리드 수집, 매출 추적까지—직접 코드로 만들어 운영합니다. 데이터
+                상담 리드 수집, 매출 추적까지—필요한 도구를 <b className="font-bold text-white">AI를 지렛대로 직접 만들어</b> 운영합니다. 데이터
                 성과관리 시트를 넘어, AI 콘텐츠 발행 시스템과 검색노출 대시보드를 직접
-                개발했습니다. 그래서 ‘감’이 아니라 ‘구조’로 성과를 반복합니다.
+                기획·설계·배포했습니다. 그래서 ‘감’이 아니라 ‘구조’로 성과를 반복합니다.
               </p>
             </div>
           </div>

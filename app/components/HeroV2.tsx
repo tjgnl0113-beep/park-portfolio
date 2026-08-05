@@ -261,18 +261,41 @@ export default function HeroV2() {
       </div>
 
       <div ref={centerRef} className={s.center}>
-        <p className={s.eyebrow} aria-label="Contents · Performance Marketer">
-          <BangChars text="CONTENTS · PERFORMANCE MARKETER" />
+        <p className={s.eyebrow} aria-label="Contents · Growth Marketer">
+          <BangChars text="CONTENTS · GROWTH MARKETER" />
         </p>
         <BigBangHeadline text={profile.headline} emphasis={["장악", "자동화"]} />
         <p className={s.role}>
-          <b>{profile.name}</b> — 고관여 시장 3년 6개월, 성과를 시스템으로
-          만드는 마케터
+          <b>{profile.name}</b> — 검색 상위 60%·전환 45%를 만들고, 그걸 굴리는
+          도구를 AI로 직접 짓는 콘텐츠 그로스 마케터
         </p>
         <div className={s.ctas}>
           <a href="#projects" className={s.ctaMain}>대표 프로젝트 보기</a>
           <a href="#contact" className={s.ctaGhost}>연락처</a>
         </div>
+        <p
+          style={{
+            marginTop: 20,
+            display: "flex",
+            alignItems: "center",
+            gap: 9,
+            justifyContent: "center",
+            fontSize: 13,
+            color: "rgba(255,255,255,0.55)",
+          }}
+        >
+          <span
+            style={{
+              width: 7,
+              height: 7,
+              borderRadius: "50%",
+              background: "#37C06B",
+              boxShadow: "0 0 8px #37C06B",
+              display: "inline-block",
+            }}
+          />
+          인하우스 마케팅팀·스타트업 그로스팀에서 함께할 자리를 찾고 있습니다
+        </p>
       </div>
 
       {needGyroPerm && (
