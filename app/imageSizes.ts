@@ -100,14 +100,6 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
     "w": 1586,
     "h": 826
   },
-  "/projects/lead-admin-2.webp": {
-    "w": 1288,
-    "h": 632
-  },
-  "/projects/lead-admin.webp": {
-    "w": 1268,
-    "h": 578
-  },
   "/projects/lead-funnel-cover.jpg": {
     "w": 2400,
     "h": 1500
@@ -119,6 +111,10 @@ export const IMG_SIZES: Record<string, { w: number; h: number }> = {
   "/projects/lead-hd.jpg": {
     "w": 860,
     "h": 1864
+  },
+  "/projects/lead-stats.jpg": {
+    "w": 2042,
+    "h": 1341
   },
   "/projects/lead-step.webp": {
     "w": 1600,
