@@ -256,6 +256,53 @@ export default function CaseStudyPage({
         </ul>
       </Chapter>
 
+      {/* 시연 영상 — 실제 움직이는 화면 */}
+      {p.demos && p.demos.length > 0 && (
+        <section className="mx-auto max-w-6xl px-6 pt-24">
+          <Reveal>
+            <div className="text-[13px] font-bold text-accent">시연 영상</div>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-white md:text-4xl">직접 돌려본 화면</h2>
+            <p className="mb-8 mt-2 text-sm text-sub">캡처가 아니라, 실제로 움직이는 퍼널과 대시보드입니다. ▶ 눌러 재생하세요.</p>
+          </Reveal>
+          <div className="space-y-10">
+            {p.demos.map((d, i) => (
+              <Reveal key={i}>
+                <figure className="overflow-hidden rounded-xl border border-[#2e2e33] bg-[#141416] shadow-[0_24px_60px_-24px_rgba(0,0,0,0.8)]">
+                  <div className="flex h-8 items-center gap-1.5 border-b border-[#26262b] bg-[#1a1a1e] px-3">
+                    <span className="h-2 w-2 rounded-full bg-accent/80" />
+                    <span className="h-2 w-2 rounded-full bg-[#3a3a40]" />
+                    <span className="h-2 w-2 rounded-full bg-[#3a3a40]" />
+                  </div>
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <video
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster={d.poster}
+                    className="block aspect-[1920/1040] w-full bg-black"
+                  >
+                    <source src={d.src} type="video/mp4" />
+                  </video>
+                  {(d.caption || d.note) && (
+                    <figcaption className="border-t border-[#26262b] px-6 py-4">
+                      {d.caption && (
+                        <div className="flex items-center gap-2 font-semibold text-white">
+                          <span className="rounded bg-accentSoft px-2 py-0.5 text-xs font-bold text-accent">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          {d.caption}
+                        </div>
+                      )}
+                      {d.note && <p className="mt-2 text-sm leading-relaxed text-sub">{d.note}</p>}
+                    </figcaption>
+                  )}
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* 화면 모아보기 — 웍스 리버 */}
       {shots.length > 0 && (
         <section className="mx-auto max-w-6xl px-6 pt-24">

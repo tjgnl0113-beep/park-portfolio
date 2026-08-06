@@ -75,6 +75,7 @@ export type Project = {
   stack: string[];
   images?: Shot[]; // 갤러리. images[0]=카드 썸네일(cover 없을 때). 없으면 그라데이션 커버.
   cover?: string; // 카드 썸네일을 갤러리 첫 장과 다르게 쓰고 싶을 때
+  demos?: { src: string; poster?: string; caption?: string; note?: string }[]; // 시연 영상(mp4)
   live?: string;
   caseStudy?: CaseStudy;
 };
@@ -202,6 +203,20 @@ export const projects: Project[] = [
       },
     ],
     live: "https://sinyong-toktok-lead.vercel.app",
+    demos: [
+      {
+        src: "/projects/lead-funnel-demo.mp4",
+        poster: "/projects/lead-step.webp",
+        caption: "퍼널 시연 — 랜딩부터 진단·게이팅·결과까지",
+        note: "광고로 들어와 ‘1분 자격조회’ → 소득·재산·자격 단계별 진단 → 결과 직전 연락처 게이팅까지, 방문자가 실제로 밟는 전환 여정을 처음부터 끝까지 움직이는 화면으로.",
+      },
+      {
+        src: "/projects/lead-admin-demo.mp4",
+        poster: "/projects/lead-stats.jpg",
+        caption: "관리자 대시보드 시연 — 방문·신청·채널 전환",
+        note: "직접 만든 운영 대시보드. 30일 추이·유입 채널별 전환율·디바이스·단계별 이탈·세션 여정·채널 ROI까지, 실데이터가 움직이는 걸 한 화면에서.",
+      },
+    ],
     caseStudy: {
       role: "기획 · 개발 · 운영 (1인)",
       context: "법률(개인회생) 상담 광고 랜딩 퍼널",
